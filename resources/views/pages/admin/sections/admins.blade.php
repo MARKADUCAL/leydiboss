@@ -1,24 +1,24 @@
-{{-- pages/admin/sections/customers.blade.php --}}
+{{-- pages/admin/sections/admins.blade.php --}}
 @extends('layouts.admin')
 
 @push('styles')
     @vite(['resources/css/auth/admin/customer.css'])
 @endpush
 @section('content')
-    <div class="admin-customers">
+    <div class="admin-admins">
 
         {{-- ── Page Header ──────────────────────────────────────── --}}
-        <div class="customers-header">
+        <div class="admins-header">
             <div>
-                <h1>User Management</h1>
-                <p>Manage and monitor customer accounts.</p>
+                <h1>Admin Management</h1>
+                <p>Manage and monitor admin accounts.</p>
             </div>
             <button class="btn btn-primary" onclick="openCreateModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
-                Add Customer
+                Add Admin
             </button>
         </div>
 
@@ -46,8 +46,8 @@
         @endif
 
         {{-- ── Toolbar ───────────────────────────────────────────── --}}
-        <div class="customers-toolbar">
-            <form method="GET" action="{{ route('admin.customers.index') }}" class="search-wrap">
+        <div class="admins-toolbar">
+            <form method="GET" action="{{ route('admin.admins.index') }}" class="search-wrap">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -59,11 +59,11 @@
 
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <span style="font-size:.8rem;color:#9ca3af;">
-                    {{ $customers->total() }} customer{{ $customers->total() !== 1 ? 's' : '' }}
+                    {{ $admins->total() }} admin{{ $admins->total() !== 1 ? 's' : '' }}
                 </span>
 
                 {{-- Per-page limit selector --}}
-                <form method="GET" action="{{ route('admin.customers.index') }}" class="limit-form"
+                <form method="GET" action="{{ route('admin.admins.index') }}" class="limit-form"
                     style="display: flex; align-items: center; gap: 0.5rem;">
                     @if ($search)
                         <input type="hidden" name="search" value="{{ $search }}">
@@ -83,11 +83,11 @@
 
         {{-- ── Table Card ───────────────────────────────────────── --}}
         <div class="table-card">
-            <table class="customers-table">
+            <table class="admins-table">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Customer</th>
+                        <th>Admin</th>
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Joined</th>
@@ -95,42 +95,42 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($customers as $customer)
+                    @forelse($admins as $admin)
                         <tr>
-                            <td style="color:#9ca3af;font-size:.8rem;">{{ $customer->id }}</td>
+                            <td style="color:#9ca3af;font-size:.8rem;">{{ $admin->id }}</td>
                             <td>
-                                <div class="customer-name-cell">
-                                    <div class="customer-avatar">
-                                        {{ strtoupper(substr($customer->name, 0, 2)) }}
+                                <div class="admin-name-cell">
+                                    <div class="admin-avatar">
+                                        {{ strtoupper(substr($admin->name, 0, 2)) }}
                                     </div>
-                                    <span class="customer-name">{{ $customer->name }}</span>
+                                    <span class="admin-name">{{ $admin->name }}</span>
                                 </div>
                             </td>
-                            <td>{{ $customer->email }}</td>
-                            <td>{{ $customer->phone_number ?? '—' }}</td>
-                            <td>{{ $customer->created_at->format('M d, Y') }}</td>
+                            <td>{{ $admin->email }}</td>
+                            <td>{{ $admin->phone_number ?? '—' }}</td>
+                            <td>{{ $admin->created_at->format('M d, Y') }}</td>
                             <td>
                                 <div class="table-actions">
                                     {{-- Edit --}}
                                     <button class="btn btn-ghost btn-sm"
-                                        onclick='openEditModal({{ $customer->id }}, @json($customer->name), @json($customer->email), @json($customer->phone_number ?? ''))'>
+                                        onclick='openEditModal({{ $admin->id }}, @json($admin->name), @json($admin->email), @json($admin->phone_number ?? ''))'>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5
-                                                                 m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                                     m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                         </svg>
                                         Edit
                                     </button>
 
                                     {{-- Delete --}}
                                     <button class="btn btn-danger btn-sm"
-                                        onclick='openDeleteModal({{ $customer->id }}, @json($customer->name))'>
+                                        onclick='openDeleteModal({{ $admin->id }}, @json($admin->name))'>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858
-                                                                 L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                                     L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                         </svg>
                                         Delete
                                     </button>
@@ -144,11 +144,11 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2
-                                                             c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857
-                                                             M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0
-                                                             019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                 c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857
+                                                                 M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0
+                                                                 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
-                                    <p>No customers found{{ $search ? ' for "' . $search . '"' : '' }}.</p>
+                                    <p>No admins found{{ $search ? ' for "' . $search . '"' : '' }}.</p>
                                 </div>
                             </td>
                         </tr>
@@ -157,14 +157,13 @@
             </table>
 
             {{-- Pagination --}}
-            @if ($customers->hasPages())
+            @if ($admins->hasPages())
                 <div class="pagination-wrap">
                     <span class="pagination-info">
-                        Showing {{ $customers->firstItem() }}–{{ $customers->lastItem() }} of {{ $customers->total() }}
-                        results
+                        Showing {{ $admins->firstItem() }}–{{ $admins->lastItem() }} of {{ $admins->total() }} results
                     </span>
                     <div class="pagination-nav">
-                        {{ $customers->links() }}
+                        {{ $admins->links() }}
                     </div>
                 </div>
             @endif
@@ -178,7 +177,7 @@
     <div class="modal-backdrop" id="createModal">
         <div class="modal">
             <div class="modal-header">
-                <h2>Add New Customer</h2>
+                <h2>Add New Admin</h2>
                 <button class="modal-close" onclick="closeModal('createModal')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -187,7 +186,7 @@
                 </button>
             </div>
 
-            <form method="POST" action="{{ route('admin.customers.store') }}">
+            <form method="POST" action="{{ route('admin.admins.store') }}">
                 @csrf
                 <div class="modal-body">
 
@@ -242,7 +241,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-ghost" onclick="closeModal('createModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create Customer</button>
+                    <button type="submit" class="btn btn-primary">Create Admin</button>
                 </div>
             </form>
         </div>
@@ -254,7 +253,7 @@
     <div class="modal-backdrop" id="editModal">
         <div class="modal">
             <div class="modal-header">
-                <h2>Edit Customer</h2>
+                <h2>Edit Admin</h2>
                 <button class="modal-close" onclick="closeModal('editModal')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -267,7 +266,7 @@
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
-                    <input type="hidden" id="edit_customer_id" name="customer_id" value="{{ old('customer_id') }}">
+                    <input type="hidden" id="edit_admin_id" name="admin_id" value="{{ old('admin_id') }}">
 
                     <div class="form-group">
                         <label for="edit_name">Full Name <span style="color:#ef4444">*</span></label>
@@ -335,11 +334,11 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858
-                                                 L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                     L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                 </div>
-                <h3>Delete Customer?</h3>
-                <p id="deleteCustomerName" style="margin-top:.35rem;"></p>
+                <h3>Delete Admin?</h3>
+                <p id="deleteAdminName" style="margin-top:.35rem;"></p>
                 <p style="margin-top:.5rem;">This action cannot be undone.</p>
             </div>
             <div class="modal-footer">
@@ -387,9 +386,9 @@
 
             // ── Edit ─────────────────────────────────────────────────
             function openEditModal(id, name, email, phone) {
-                const updateUrlTemplate = @json(route('admin.customers.update', ['customer' => '__ID__']));
+                const updateUrlTemplate = @json(route('admin.admins.update', ['admin' => '__ID__']));
                 document.getElementById('editForm').action = updateUrlTemplate.replace('__ID__', id);
-                document.getElementById('edit_customer_id').value = id;
+                document.getElementById('edit_admin_id').value = id;
                 document.getElementById('edit_name').value = name;
                 document.getElementById('edit_email').value = email;
                 document.getElementById('edit_phone').value = phone;
@@ -400,18 +399,18 @@
 
             // ── Delete ───────────────────────────────────────────────
             function openDeleteModal(id, name) {
-                const deleteUrlTemplate = @json(route('admin.customers.destroy', ['customer' => '__ID__']));
+                const deleteUrlTemplate = @json(route('admin.admins.destroy', ['admin' => '__ID__']));
                 document.getElementById('deleteForm').action = deleteUrlTemplate.replace('__ID__', id);
-                document.getElementById('deleteCustomerName').textContent =
+                document.getElementById('deleteAdminName').textContent =
                     `You are about to permanently delete "${name}".`;
                 openModal('deleteModal');
             }
 
             // ── Re-open modals on validation errors ─────────────────
             @if ($errors->any())
-                @if (old('_method') === 'PUT' && old('customer_id'))
+                @if (old('_method') === 'PUT' && old('admin_id'))
                     openEditModal(
-                        @json(old('customer_id')),
+                        @json(old('admin_id')),
                         @json(old('name')),
                         @json(old('email')),
                         @json(old('phone_number'))

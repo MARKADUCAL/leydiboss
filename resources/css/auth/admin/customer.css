@@ -1,15 +1,17 @@
 /* ============================================================
-   Admin – Customers Page
+   Admin – Management Pages (Customers & Admins)
    ============================================================ */
 
 /* ── Page Shell ──────────────────────────────────────────── */
-.admin-customers {
+.admin-customers,
+.admin-admins {
     padding: 2rem 2.5rem;
     font-family: "DM Sans", sans-serif;
 }
 
 /* ── Page Header ─────────────────────────────────────────── */
-.customers-header {
+.customers-header,
+.admins-header {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
@@ -18,7 +20,8 @@
     gap: 1rem;
 }
 
-.customers-header h1 {
+.customers-header h1,
+.admins-header h1 {
     font-size: 1.6rem;
     font-weight: 700;
     color: #1a1a2e;
@@ -26,14 +29,16 @@
     margin: 0;
 }
 
-.customers-header p {
+.customers-header p,
+.admins-header p {
     margin: 0.25rem 0 0;
     color: #6b7280;
     font-size: 0.875rem;
 }
 
 /* ── Toolbar (search + add button) ──────────────────────── */
-.customers-toolbar {
+.customers-toolbar,
+.admins-toolbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -161,18 +166,21 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
-.customers-table {
+.customers-table,
+.admins-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.875rem;
 }
 
-.customers-table thead {
+.customers-table thead,
+.admins-table thead {
     background: #f9fafb;
     border-bottom: 1.5px solid #e5e7eb;
 }
 
-.customers-table th {
+.customers-table th,
+.admins-table th {
     padding: 0.75rem 1rem;
     text-align: left;
     font-weight: 600;
@@ -183,23 +191,27 @@
     white-space: nowrap;
 }
 
-.customers-table td {
+.customers-table td,
+.admins-table td {
     padding: 0.85rem 1rem;
     color: #374151;
     border-bottom: 1px solid #f3f4f6;
     vertical-align: middle;
 }
 
-.customers-table tbody tr:last-child td {
+.customers-table tbody tr:last-child td,
+.admins-table tbody tr:last-child td {
     border-bottom: none;
 }
 
-.customers-table tbody tr:hover td {
+.customers-table tbody tr:hover td,
+.admins-table tbody tr:hover td {
     background: #fafafa;
 }
 
 /* Avatar chip */
-.customer-avatar {
+.customer-avatar,
+.admin-avatar {
     width: 34px;
     height: 34px;
     border-radius: 50%;
@@ -214,13 +226,15 @@
     text-transform: uppercase;
 }
 
-.customer-name-cell {
+.customer-name-cell,
+.admin-name-cell {
     display: flex;
     align-items: center;
     gap: 0.65rem;
 }
 
-.customer-name {
+.customer-name,
+.admin-name {
     font-weight: 600;
     color: #1a1a2e;
 }
@@ -265,18 +279,23 @@
 
 /* ── Pagination ──────────────────────────────────────────── */
 .pagination-wrap {
-    padding: 1rem 1.25rem;
+    padding: 0.95rem 1.5rem;
     border-top: 1px solid #f3f4f6;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
+    gap: 1.5rem;
 }
 
 .pagination-info {
     font-size: 0.8rem;
-    color: #9ca3af;
+    color: #6b7280;
+}
+
+.pagination-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
 }
 
 .pagination-wrap .pagination {
@@ -292,16 +311,17 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 32px;
-    height: 32px;
-    padding: 0 0.5rem;
-    border-radius: 6px;
-    font-size: 0.8rem;
+    min-width: 30px;
+    height: 30px;
+    padding: 0;
+    border-radius: 5px;
+    font-size: 0.75rem;
     font-weight: 500;
-    border: 1.5px solid #e5e7eb;
-    color: #374151;
+    border: 1px solid #e5e7eb;
+    color: #6b7280;
     text-decoration: none;
     transition: all 0.15s;
+    background: #fff;
 }
 
 .pagination-wrap .pagination li.active span {
@@ -310,10 +330,20 @@
     color: #fff;
 }
 
-.pagination-wrap .pagination li a:hover {
-    background: #f5f3ff;
-    border-color: #c4b5fd;
+.pagination-wrap .pagination li a:hover:not(.disabled) {
+    border-color: #6366f1;
     color: #6366f1;
+    background: #f5f3ff;
+}
+
+.pagination-wrap .pagination li.disabled span {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Hide page numbers, show only prev/next */
+.pagination-wrap .pagination li:not(.prev):not(.next) span {
+    display: none;
 }
 
 /* ── Modal ───────────────────────────────────────────────── */

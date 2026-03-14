@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\Auth\RegisterController as AdminRegisterControlle
 
 // ── Admin Page Controllers ───────────────────────────────────────────────────
 use App\Http\Controllers\Admin\DashboardController    as AdminDashboardController;
+use App\Http\Controllers\Admin\AdminsController       as AdminAdminsController;
 use App\Http\Controllers\Admin\CustomersController    as AdminCustomersController;
 use App\Http\Controllers\Admin\ServicesManagementController;
 
@@ -96,6 +97,12 @@ Route::name('admin.')->prefix('admin')->group(function () {
         Route::post(   '/customers',          [AdminCustomersController::class, 'store'  ])->name('customers.store');
         Route::put(    '/customers/{customer}',[AdminCustomersController::class, 'update' ])->name('customers.update');
         Route::delete( '/customers/{customer}',[AdminCustomersController::class, 'destroy'])->name('customers.destroy');
+
+        // Admins CRUD
+        Route::get(    '/admins',          [AdminAdminsController::class, 'index'  ])->name('admins.index');
+        Route::post(   '/admins',          [AdminAdminsController::class, 'store'  ])->name('admins.store');
+        Route::put(    '/admins/{admin}',  [AdminAdminsController::class, 'update' ])->name('admins.update');
+        Route::delete( '/admins/{admin}',  [AdminAdminsController::class, 'destroy'])->name('admins.destroy');
 
         // Services & Pricing Management
         Route::get('/services', [ServicesManagementController::class, 'index'])->name('services.index');
