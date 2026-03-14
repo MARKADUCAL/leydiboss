@@ -11,6 +11,18 @@ class Admin extends Authenticatable
 {
     use HasFactory, Notifiable, SoftDeletes;
 
+    public const ROLE_MANAGER = 'manager';
+    public const ROLE_ADMIN = 'admin';
+    public const ROLE_SUPER_ADMIN = 'super_admin';
+
+    /** Roles that can access each area. Super admin can access all. */
+    private const AREA_ROLES = [
+        'dashboard' => [self::ROLE_MANAGER, self::ROLE_ADMIN, self::ROLE_SUPER_ADMIN],
+        'services'  => [self::ROLE_MANAGER, self::ROLE_ADMIN, self::ROLE_SUPER_ADMIN],
+        'customers' => [self::ROLE_ADMIN, self::ROLE_SUPER_ADMIN],
+        'admins'    => [self::ROLE_SUPER_ADMIN],
+    ];
+
     protected $table = 'admins';
 
     protected $fillable = [
@@ -18,6 +30,7 @@ class Admin extends Authenticatable
         'email',
         'phone_number',
         'password',
+        'role',
     ];
 
     protected $hidden = [
@@ -30,6 +43,43 @@ class Admin extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+        ];
+    }
+
+    public function isManager(): bool
+    {
+        return $this->role === self::ROLE_MANAGER;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === self::ROLE_SUPER_ADMIN;
+    }
+
+    /**
+     * Check if this admin can access an area: dashboard, services, customers, admins.
+     */
+    public function canAccessArea(string $area): bool
+    {
+        $allowed = self::AREA_ROLES[$area] ?? [];
+
+        return in_array($this->role, $allowed, true);
+    }
+
+    /**
+     * All role values for dropdowns.
+     */
+    public static function roles(): array
+    {
+        return [
+            self::ROLE_MANAGER     => 'Manager',
+            self::ROLE_ADMIN       => 'Admin',
+            self::ROLE_SUPER_ADMIN => 'Super Admin',
         ];
     }
 }

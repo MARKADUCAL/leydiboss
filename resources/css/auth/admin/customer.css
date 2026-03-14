@@ -514,3 +514,25 @@
     color: #6b7280;
     margin: 0;
 }
+
+/* ── Role badges (Admins table) ───────────────────────────── */
+.role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+.role-badge--manager {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+.role-badge--admin {
+    background: #d1fae5;
+    color: #047857;
+}
+.role-badge--super_admin {
+    background: #fef3c7;
+    color: #b45309;
+}

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\RequireCustomerAuth;
 use App\Http\Middleware\RequireAdminAuth;
+use App\Http\Middleware\EnsureAdminRole;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'customer.auth' => RequireCustomerAuth::class,
             'admin.auth' => RequireAdminAuth::class,
+            'admin.role' => EnsureAdminRole::class,
         ]);
 
         // When an already-logged-in user visits login/register, send them to their dashboard

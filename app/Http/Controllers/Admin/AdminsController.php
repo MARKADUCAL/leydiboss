@@ -38,19 +38,29 @@ class AdminsController extends Controller
     // ── Store (Create) ────────────────────────────────────────────────────────
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'unique:admins,email'],
+        $rules = [
+            'name'         => ['required', 'string', 'max:255'],
+            'email'        => ['required', 'email', 'unique:admins,email'],
             'phone_number' => ['nullable', 'string', 'max:20'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+            'password'     => ['required', 'string', 'min:8', 'confirmed'],
+        ];
+        if ($request->user('admin')->isSuperAdmin()) {
+            $rules['role'] = ['required', 'string', Rule::in(array_keys(Admin::roles()))];
+        }
+        $data = $request->validate($rules);
 
-        Admin::create([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
+        $payload = [
+            'name'         => $data['name'],
+            'email'        => $data['email'],
             'phone_number' => $data['phone_number'] ?? null,
-            'password' => Hash::make($data['password']),
-        ]);
+            'password'     => Hash::make($data['password']),
+        ];
+        if ($request->user('admin')->isSuperAdmin() && isset($data['role'])) {
+            $payload['role'] = $data['role'];
+        } else {
+            $payload['role'] = Admin::ROLE_MANAGER;
+        }
+        Admin::create($payload);
 
         return redirect()->route('admin.admins.index')
                          ->with('success', 'Admin created successfully.');
@@ -59,17 +69,23 @@ class AdminsController extends Controller
     // ── Update (Edit) ─────────────────────────────────────────────────────────
     public function update(Request $request, Admin $admin)
     {
-        $data = $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', Rule::unique('admins', 'email')->ignore($admin->id)],
+        $rules = [
+            'name'         => ['required', 'string', 'max:255'],
+            'email'        => ['required', 'email', Rule::unique('admins', 'email')->ignore($admin->id)],
             'phone_number' => ['nullable', 'string', 'max:20'],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-        ]);
+            'password'     => ['nullable', 'string', 'min:8', 'confirmed'],
+        ];
+        if ($request->user('admin')->isSuperAdmin()) {
+            $rules['role'] = ['required', 'string', Rule::in(array_keys(Admin::roles()))];
+        }
+        $data = $request->validate($rules);
 
-        $admin->name  = $data['name'];
-        $admin->email = $data['email'];
+        $admin->name         = $data['name'];
+        $admin->email        = $data['email'];
         $admin->phone_number = $data['phone_number'] ?? $admin->phone_number;
-
+        if ($request->user('admin')->isSuperAdmin() && isset($data['role'])) {
+            $admin->role = $data['role'];
+        }
         if (!empty($data['password'])) {
             $admin->password = Hash::make($data['password']);
         }

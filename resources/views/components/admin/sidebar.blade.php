@@ -25,6 +25,7 @@
             <span class="lb-sidebar__nav-label">Dashboard</span>
         </a>
 
+        @can('accessAdminCustomers')
         <a href="{{ route('admin.customers.index') }}"
             class="lb-sidebar__nav-item {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}">
             <span class="lb-sidebar__nav-icon">
@@ -38,7 +39,9 @@
             </span>
             <span class="lb-sidebar__nav-label">Customers</span>
         </a>
+        @endcan
 
+        @can('accessAdminAdmins')
         <a href="{{ route('admin.admins.index') }}"
             class="lb-sidebar__nav-item {{ request()->routeIs('admin.admins.*') ? 'active' : '' }}">
             <span class="lb-sidebar__nav-icon">
@@ -50,6 +53,7 @@
             </span>
             <span class="lb-sidebar__nav-label">Admins</span>
         </a>
+        @endcan
 
         <a href="{{ route('admin.services.index') }}"
             class="lb-sidebar__nav-item {{ request()->routeIs('admin.services.*') ? 'active' : '' }}">

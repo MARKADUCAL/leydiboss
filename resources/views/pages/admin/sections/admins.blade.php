@@ -90,6 +90,7 @@
                         <th>Admin</th>
                         <th>Email</th>
                         <th>Phone</th>
+                        <th>Role</th>
                         <th>Joined</th>
                         <th>Actions</th>
                     </tr>
@@ -108,12 +109,13 @@
                             </td>
                             <td>{{ $admin->email }}</td>
                             <td>{{ $admin->phone_number ?? '—' }}</td>
+                            <td><span class="role-badge role-badge--{{ $admin->role }}">{{ \App\Models\Admin::roles()[$admin->role] ?? $admin->role }}</span></td>
                             <td>{{ $admin->created_at->format('M d, Y') }}</td>
                             <td>
                                 <div class="table-actions">
                                     {{-- Edit --}}
                                     <button class="btn btn-ghost btn-sm"
-                                        onclick='openEditModal({{ $admin->id }}, @json($admin->name), @json($admin->email), @json($admin->phone_number ?? ''))'>
+                                        onclick='openEditModal({{ $admin->id }}, @json($admin->name), @json($admin->email), @json($admin->phone_number ?? ''), @json($admin->role))'>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -139,7 +141,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6">
+                            <td colspan="7">
                                 <div class="empty-state">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
@@ -220,6 +222,18 @@
                         @enderror
                     </div>
 
+                    <div class="form-group">
+                        <label for="create_role">Role <span style="color:#ef4444">*</span></label>
+                        <select id="create_role" name="role" class="form-control @error('role') is-invalid @enderror" required>
+                            @foreach (\App\Models\Admin::roles() as $value => $label)
+                                <option value="{{ $value }}" @selected(old('role', 'manager') === $value)>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        @error('role')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group" style="margin-bottom:0">
                             <label for="create_password">Password <span style="color:#ef4444">*</span></label>
@@ -294,6 +308,18 @@
                             class="form-control @error('phone_number') is-invalid @enderror"
                             value="{{ old('_method') === 'PUT' ? old('phone_number') : '' }}">
                         @error('phone_number')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_role">Role <span style="color:#ef4444">*</span></label>
+                        <select id="edit_role" name="role" class="form-control @error('role') is-invalid @enderror" required>
+                            @foreach (\App\Models\Admin::roles() as $value => $label)
+                                <option value="{{ $value }}" @selected((old('_method') === 'PUT' ? old('role') : '') === $value)>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        @error('role')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -385,13 +411,14 @@
             }
 
             // ── Edit ─────────────────────────────────────────────────
-            function openEditModal(id, name, email, phone) {
+            function openEditModal(id, name, email, phone, role) {
                 const updateUrlTemplate = @json(route('admin.admins.update', ['admin' => '__ID__']));
                 document.getElementById('editForm').action = updateUrlTemplate.replace('__ID__', id);
                 document.getElementById('edit_admin_id').value = id;
                 document.getElementById('edit_name').value = name;
                 document.getElementById('edit_email').value = email;
-                document.getElementById('edit_phone').value = phone;
+                document.getElementById('edit_phone').value = phone || '';
+                document.getElementById('edit_role').value = role || 'manager';
                 document.getElementById('edit_password').value = '';
                 document.getElementById('edit_password_confirmation').value = '';
                 openModal('editModal');
@@ -413,7 +440,8 @@
                         @json(old('admin_id')),
                         @json(old('name')),
                         @json(old('email')),
-                        @json(old('phone_number'))
+                        @json(old('phone_number')),
+                        @json(old('role'))
                     );
                 @else
                     openModal('createModal');

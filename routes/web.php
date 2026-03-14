@@ -92,17 +92,21 @@ Route::name('admin.')->prefix('admin')->group(function () {
     Route::middleware('admin.auth')->group(function () {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-        // Customers CRUD
-        Route::get(    '/customers',          [AdminCustomersController::class, 'index'  ])->name('customers.index');
-        Route::post(   '/customers',          [AdminCustomersController::class, 'store'  ])->name('customers.store');
-        Route::put(    '/customers/{customer}',[AdminCustomersController::class, 'update' ])->name('customers.update');
-        Route::delete( '/customers/{customer}',[AdminCustomersController::class, 'destroy'])->name('customers.destroy');
+        // Customers CRUD (admin + super_admin)
+        Route::middleware('admin.role:admin,super_admin')->group(function () {
+            Route::get(    '/customers',          [AdminCustomersController::class, 'index'  ])->name('customers.index');
+            Route::post(   '/customers',          [AdminCustomersController::class, 'store'  ])->name('customers.store');
+            Route::put(    '/customers/{customer}',[AdminCustomersController::class, 'update' ])->name('customers.update');
+            Route::delete( '/customers/{customer}',[AdminCustomersController::class, 'destroy'])->name('customers.destroy');
+        });
 
-        // Admins CRUD
-        Route::get(    '/admins',          [AdminAdminsController::class, 'index'  ])->name('admins.index');
-        Route::post(   '/admins',          [AdminAdminsController::class, 'store'  ])->name('admins.store');
-        Route::put(    '/admins/{admin}',  [AdminAdminsController::class, 'update' ])->name('admins.update');
-        Route::delete( '/admins/{admin}',  [AdminAdminsController::class, 'destroy'])->name('admins.destroy');
+        // Admins CRUD (super_admin only)
+        Route::middleware('admin.role:super_admin')->group(function () {
+            Route::get(    '/admins',          [AdminAdminsController::class, 'index'  ])->name('admins.index');
+            Route::post(   '/admins',          [AdminAdminsController::class, 'store'  ])->name('admins.store');
+            Route::put(    '/admins/{admin}',  [AdminAdminsController::class, 'update' ])->name('admins.update');
+            Route::delete( '/admins/{admin}',  [AdminAdminsController::class, 'destroy'])->name('admins.destroy');
+        });
 
         // Services & Pricing Management
         Route::get('/services', [ServicesManagementController::class, 'index'])->name('services.index');

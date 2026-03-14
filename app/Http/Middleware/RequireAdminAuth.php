@@ -20,6 +20,9 @@ class RequireAdminAuth
             return redirect()->guest(route('admin.login'));
         }
 
+        // Use admin as the default guard for this request so Gates/Policies see the admin user
+        Auth::setDefaultDriver('admin');
+
         return $next($request);
     }
 }
