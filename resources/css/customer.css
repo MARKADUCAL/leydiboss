@@ -1,0 +1,287 @@
+/* =========================================================
+   customer.css  –  Leydi Boss Customer Portal Layout
+   ========================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
+
+/* ── Reset & Base ── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+    font-family: "Nunito", sans-serif;
+    background: #f3f4f6;
+    color: #111827;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================================================
+   Main Layout Grid
+   =========================================================
+   ┌──────────────┬────────────────────────────────────────┐
+   │              │  Topbar                                │
+   │   Sidebar    ├────────────────────────────────────────┤
+   │   (fixed)    │  Main content (scrollable)             │
+   │              │                                        │
+   └──────────────┴────────────────────────────────────────┘
+   ========================================================= */
+
+.lb-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #f3f4f6;
+}
+
+/* ── Sidebar column ── */
+.lb-layout__sidebar {
+    width: 220px;
+    min-width: 220px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #f3f4f6;
+    border-right: 1px solid #e5e7eb;
+    z-index: 50;
+    transition: all 0.3s ease;
+
+    /* Hide scrollbar but still scrollable */
+    scrollbar-width: none;
+}
+.lb-layout__sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+.lb-layout__sidebar.collapsed {
+    width: 72px;
+    min-width: 72px;
+}
+
+/* ── Backdrop Overlay ── */
+.lb-layout__backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lb-layout__backdrop.open {
+    display: block;
+    opacity: 1;
+}
+
+/* ── Right body column ── */
+.lb-layout__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* prevent flex overflow */
+    background: #ffffff;
+}
+
+/* ── Topbar row ── */
+.lb-layout__topbar {
+    flex-shrink: 0;
+    /* The topbar component handles its own height & border */
+}
+
+/* ── Page content area ── */
+.lb-layout__main {
+    flex: 1;
+    padding: 32px 40px;
+    overflow-y: auto;
+    background: #f3f4f6;
+}
+
+/* =========================================================
+   Responsive  –  collapse sidebar to icon-rail on mobile
+   ========================================================= */
+@media (max-width: 768px) {
+    .lb-layout__sidebar {
+        position: fixed;
+        left: 0;
+        width: 220px;
+        transform: translateX(-100%);
+        z-index: 100;
+    }
+
+    .lb-layout__sidebar.open {
+        transform: translateX(0);
+    }
+
+    .lb-layout__sidebar.collapsed {
+        width: 220px;
+        transform: translateX(-100%);
+    }
+
+    .lb-layout__main {
+        padding: 20px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .lb-layout__sidebar {
+        width: 240px;
+    }
+
+    .lb-layout__main {
+        padding: 16px 12px;
+    }
+}
+
+/* =========================================================
+   Utility helpers used inside @yield('content') pages
+   ========================================================= */
+
+/* Page-level card container */
+.lb-card {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    padding: 28px 32px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Hero / welcome banner (blue gradient like in the screenshot) */
+.lb-hero {
+    background: linear-gradient(135deg, #4c6ef5 0%, #1a56db 60%, #1e429f 100%);
+    border-radius: 14px;
+    padding: 48px 40px;
+    color: #ffffff;
+    margin-bottom: 24px;
+}
+
+.lb-hero__title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+}
+
+.lb-hero__subtitle {
+    font-size: 15px;
+    font-weight: 400;
+    opacity: 0.85;
+    max-width: 560px;
+    margin: 0 auto 24px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.lb-hero__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #1a56db;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    font-family: "Nunito", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 11px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+        background 0.18s ease,
+        transform 0.12s ease;
+}
+
+.lb-hero__btn:hover {
+    background: #1648c0;
+    transform: translateY(-1px);
+}
+
+/* Section heading */
+.lb-section-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 6px;
+    color: #111827;
+    letter-spacing: -0.3px;
+}
+
+.lb-section-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+/* 4-column card grid (packages) */
+.lb-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+@media (max-width: 1024px) {
+    .lb-grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .lb-grid-4 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Package / info card */
+.lb-pkg-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px 18px;
+    text-align: center;
+    transition:
+        box-shadow 0.18s ease,
+        transform 0.12s ease;
+}
+
+.lb-pkg-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.lb-pkg-card__name {
+    font-size: 15px;
+    font-weight: 800;
+    color: #1a56db;
+    margin-bottom: 6px;
+}
+
+.lb-pkg-card__desc {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Vehicle classification section (light-blue bg) */
+.lb-vehicle-section {
+    background: #eff6ff;
+    border-radius: 14px;
+    padding: 32px;
+    margin-top: 24px;
+}
+
+.lb-vehicle-section .lb-section-title {
+    color: #1a56db;
+}

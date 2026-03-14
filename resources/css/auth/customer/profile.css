@@ -1,0 +1,444 @@
+/* =========================================================
+   profile.css  –  Leydi Boss Customer Profile
+   ========================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
+
+.cp-wrap {
+    font-family: "Nunito", sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.cp-alert {
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+}
+
+.cp-alert--success {
+    background: #ecfdf5;
+    border-color: #6ee7b7;
+    color: #065f46;
+}
+
+.cp-alert--error {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #991b1b;
+}
+
+/* Profile Card */
+.cp-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-top: 3px solid #ff4d2d;
+    border-radius: 14px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.cp-card__header {
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.cp-card__title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.cp-profile {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 18px;
+    background: #fff7f5;
+}
+
+.cp-avatar {
+    width: 92px;
+    height: 92px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 30% 30%, #ff7a59, #ff4d2d);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    font-size: 26px;
+    box-shadow: 0 10px 20px rgba(255, 77, 45, 0.25);
+    margin-left: 6px;
+}
+
+.cp-profile__fields {
+    display: grid;
+    gap: 12px;
+}
+
+.cp-field {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+
+.cp-field__label {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.cp-field__value {
+    font-size: 14px;
+    color: #0f172a;
+    font-weight: 700;
+    word-break: break-word;
+}
+
+.cp-pill {
+    display: inline-flex;
+    align-items: center;
+    background: #ffe9e4;
+    border: 1px solid #ffcabf;
+    color: #7a1b0a;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 13px;
+}
+
+/* Section header */
+.cp-section {
+    background: transparent;
+}
+
+.cp-section__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.cp-section__title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.cp-section__sub {
+    margin: 6px 0 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* Buttons */
+.cp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 13px;
+    transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease;
+    white-space: nowrap;
+}
+
+.cp-btn--primary {
+    background: #ff4d2d;
+    color: #fff;
+}
+
+.cp-btn--primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.cp-btn--accent {
+    background: #ff4d2d;
+    color: #fff;
+    box-shadow: 0 10px 18px rgba(255, 77, 45, 0.25);
+}
+
+.cp-btn--accent:hover {
+    background: #f33f1e;
+    transform: translateY(-1px);
+}
+
+.cp-btn--ghost {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+}
+
+.cp-btn--ghost:hover {
+    background: #f8fafc;
+}
+
+.cp-link-danger {
+    background: none;
+    border: none;
+    color: #ff4d2d;
+    font-weight: 800;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 8px;
+}
+
+.cp-link-danger:hover {
+    background: rgba(255, 77, 45, 0.08);
+}
+
+/* Vehicles */
+.cp-vehicles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.cp-vehicle-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.cp-vehicle-card__top {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.cp-vehicle-card__name {
+    font-weight: 900;
+    font-size: 16px;
+    color: #0f172a;
+    text-transform: lowercase;
+}
+
+.cp-vehicle-type {
+    padding: 0 16px 8px;
+}
+
+.cp-vehicle-type__badge {
+    display: inline-flex;
+    align-items: center;
+    background: #ffe9e4;
+    border: 1px solid #ffcabf;
+    color: #7a1b0a;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 900;
+    font-size: 12px;
+}
+
+.cp-vehicle-meta {
+    padding: 10px 16px 14px;
+}
+
+.cp-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-top: 1px solid #f1f5f9;
+    font-size: 13px;
+}
+
+.cp-meta-row:first-child {
+    border-top: none;
+}
+
+.cp-meta-label {
+    color: #64748b;
+    font-weight: 700;
+}
+
+.cp-meta-value {
+    color: #0f172a;
+    font-weight: 800;
+}
+
+.cp-empty {
+    background: #fff;
+    border: 1px dashed #cbd5e1;
+    border-radius: 14px;
+    padding: 18px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* Modal */
+.cp-modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(3px);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.cp-modal-backdrop.open {
+    display: flex;
+}
+
+.cp-modal {
+    width: 100%;
+    max-width: 520px;
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.25);
+    margin: 12px;
+    animation: cpModalIn 0.18s ease;
+}
+
+@keyframes cpModalIn {
+    from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.cp-modal__header {
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.cp-modal__header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.cp-modal__close {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 900;
+    color: #64748b;
+}
+
+.cp-modal__close:hover {
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+.cp-modal__body {
+    padding: 16px 18px;
+}
+
+.cp-modal__footer {
+    padding: 14px 18px 16px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.cp-form-group {
+    margin-bottom: 14px;
+}
+
+.cp-form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 900;
+    color: #334155;
+    margin-bottom: 6px;
+}
+
+.cp-req {
+    color: #ef4444;
+}
+
+.cp-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    font-weight: 700;
+    font-size: 13px;
+    outline: none;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    background: #fff;
+}
+
+.cp-input:focus {
+    border-color: #ff4d2d;
+    box-shadow: 0 0 0 3px rgba(255, 77, 45, 0.16);
+}
+
+.cp-input.is-invalid {
+    border-color: #f87171;
+}
+
+.cp-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.cp-error {
+    color: #dc2626;
+    font-weight: 800;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .cp-vehicles {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .cp-profile {
+        grid-template-columns: 1fr;
+    }
+
+    .cp-avatar {
+        margin-left: 0;
+    }
+
+    .cp-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+

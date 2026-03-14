@@ -1,0 +1,221 @@
+/* ============================================================
+   Leydi Boss — Sidebar Styles
+   Theme: Dark background, hot-pink (#e91e8c) accents
+   ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+
+:root {
+    --sidebar-bg: #1a1a1a;
+    --sidebar-border: #2a2a2a;
+    --sidebar-width: 240px;
+
+    --brand-pink: #e91e8c;
+    --brand-pink-light: rgba(233, 30, 140, 0.15);
+    --brand-pink-glow: rgba(233, 30, 140, 0.35);
+
+    --text-primary: #f0f0f0;
+    --text-muted: #888888;
+
+    --nav-hover-bg: rgba(255, 255, 255, 0.06);
+    --nav-active-bg: rgba(233, 30, 140, 0.18);
+    --nav-active-border: var(--brand-pink);
+
+    --transition-speed: 0.22s;
+    --font-family: "Montserrat", sans-serif;
+}
+
+/* ── Container ───────────────────────────────────────────── */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    width: var(--sidebar-width);
+    min-height: 100vh;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
+    font-family: var(--font-family);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    padding-bottom: 2rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Subtle pink top accent bar */
+.sidebar::before {
+    content: "";
+    display: block;
+    height: 3px;
+    background: linear-gradient(90deg, var(--brand-pink), transparent);
+    flex-shrink: 0;
+}
+
+/* ── Brand / Logo ────────────────────────────────────────── */
+.sidebar-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.75rem 1rem 1.5rem;
+    border-bottom: 1px solid var(--sidebar-border);
+    gap: 0.65rem;
+}
+
+.sidebar-logo-wrap {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--brand-pink);
+    box-shadow: 0 0 18px var(--brand-pink-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0f0f0f;
+}
+
+.sidebar-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Fallback placeholder shown when image is missing */
+.sidebar-logo-wrap::after {
+    content: "LB";
+    display: none;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--brand-pink);
+    letter-spacing: 0.05em;
+}
+
+.sidebar-logo-img:not([src]),
+.sidebar-logo-img[src=""] {
+    display: none;
+}
+
+.sidebar-logo-img:not([src]) ~ .sidebar-logo-wrap::after,
+.sidebar-logo-img[src=""] ~ .sidebar-logo-wrap::after {
+    display: block;
+}
+
+.sidebar-brand-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.04em;
+    text-align: center;
+}
+
+/* ── Navigation ──────────────────────────────────────────── */
+.sidebar-nav {
+    flex: 1;
+    padding: 1.25rem 0.75rem;
+}
+
+.sidebar-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+/* ── Nav Item ────────────────────────────────────────────── */
+.sidebar-nav-item {
+    width: 100%;
+}
+
+/* ── Nav Link ────────────────────────────────────────────── */
+.sidebar-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition:
+        background-color var(--transition-speed) ease,
+        color var(--transition-speed) ease,
+        border-left-color var(--transition-speed) ease,
+        box-shadow var(--transition-speed) ease;
+    border-left: 3px solid transparent;
+    position: relative;
+}
+
+.sidebar-nav-link:hover {
+    background-color: var(--nav-hover-bg);
+    color: var(--text-primary);
+    border-left-color: rgba(233, 30, 140, 0.5);
+}
+
+.sidebar-nav-link.active {
+    background-color: var(--nav-active-bg);
+    color: var(--brand-pink);
+    border-left-color: var(--nav-active-border);
+    box-shadow: inset 0 0 12px var(--brand-pink-light);
+    font-weight: 600;
+}
+
+/* ── Nav Icon ────────────────────────────────────────────── */
+.sidebar-nav-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.sidebar-nav-icon svg {
+    width: 18px;
+    height: 18px;
+    transition: stroke var(--transition-speed) ease;
+}
+
+.sidebar-nav-link.active .sidebar-nav-icon svg {
+    stroke: var(--brand-pink);
+    filter: drop-shadow(0 0 4px var(--brand-pink-glow));
+}
+
+/* ── Nav Label ───────────────────────────────────────────── */
+.sidebar-nav-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Scrollbar styling ───────────────────────────────────── */
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--sidebar-border);
+    border-radius: 2px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-pink);
+}
+
+/* ── Responsive collapse (mobile) ───────────────────────── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.6);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+}

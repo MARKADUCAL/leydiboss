@@ -1,0 +1,417 @@
+/* resources/css/landing/main.css */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+        Cantarell, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+/* Topbar styles — high z-index so it stays above hero and is always clickable */
+.topbar {
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    width: 100%;
+    isolation: isolate;
+}
+
+.topbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* Logo styles */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #333333;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+    display: block;
+}
+
+/* Navigation menu styles */
+.nav-menu {
+    display: flex;
+    gap: 2rem;
+    flex: 1;
+    justify-content: center;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #333333;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: #b93cb6;
+}
+
+/* Active navigation link */
+.nav-link.active {
+    color: #b93cb6;
+}
+
+.nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(135deg, #b93cb6, #d946ab);
+    border-radius: 2px;
+}
+
+/* Button styles — ensure link is on top and clickable */
+.btn-started {
+    display: inline-block;
+    background: linear-gradient(135deg, #b93cb6, #d946ab);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+}
+
+.btn-started:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(185, 60, 182, 0.4);
+}
+
+.btn-started:active {
+    transform: translateY(0);
+}
+
+/* Main content area */
+main {
+    flex: 1;
+}
+
+/* ── Topbar Modal ── */
+.topbar-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+}
+
+.topbar-modal-overlay.active {
+    display: flex;
+    animation: topbarFadeIn 0.25s ease;
+}
+
+.topbar-modal-box {
+    background: white;
+    border-radius: 20px;
+    padding: 50px 40px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+    animation: topbarSlideUp 0.3s ease;
+    border-top: 5px solid #b93cb6;
+}
+
+.topbar-modal-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.topbar-modal-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #111;
+    margin-bottom: 10px;
+}
+
+.topbar-modal-message {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.topbar-modal-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.topbar-modal-btn {
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.topbar-modal-cancel {
+    background: #f0f0f0;
+    color: #555;
+}
+
+.topbar-modal-cancel:hover {
+    background: #ddd;
+}
+
+.topbar-modal-confirm {
+    background: linear-gradient(135deg, #b93cb6, #d946ab);
+    color: white;
+}
+
+.topbar-modal-confirm:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+@keyframes topbarFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes topbarSlideUp {
+    from {
+        transform: translateY(40px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* =============================================
+   Footer Styles — Dark / Purple Accent Theme
+   ============================================= */
+
+.footer {
+    background-color: #0d0d0d;
+    color: #e0e0e0;
+    padding: 3.5rem 2rem 1.5rem;
+    margin-top: auto;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.6fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2rem;
+}
+
+/* ── Column Headings ── */
+.footer-heading {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 1.25rem;
+    letter-spacing: 0.02em;
+}
+
+/* ── Quick Links ── */
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.6rem;
+}
+
+.footer-link {
+    color: #cccccc;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+    color: #c0449a;
+}
+
+/* ── Contact Us ── */
+.footer-contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    font-size: 0.9rem;
+    color: #cccccc;
+    line-height: 1.5;
+}
+
+.contact-icon {
+    font-size: 1rem;
+    color: #c0449a;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+.contact-item strong {
+    color: #ffffff;
+}
+
+/* ── Follow Us / Social ── */
+.footer-social {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+}
+
+.footer-social li {
+    margin-bottom: 0.6rem;
+}
+
+/* ── Book Now Button ── */
+.btn-book-now {
+    display: inline-block;
+    background-color: #8b1a6b;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.6rem 1.8rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    transition:
+        background-color 0.25s ease,
+        transform 0.15s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-book-now:hover {
+    background-color: #a8237f;
+    transform: translateY(-1px);
+}
+
+/* ── Divider & Copyright ── */
+.footer-divider {
+    border: none;
+    border-top: 1px solid #2a2a2a;
+    margin: 0 0 1rem 0;
+}
+
+.footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-copyright {
+    font-size: 0.8rem;
+    color: #666666;
+    text-align: center;
+    margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .footer-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 580px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+    .topbar-container {
+        padding: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .nav-menu {
+        order: 3;
+        flex: 0 0 100%;
+        margin-top: 1rem;
+        gap: 1rem;
+        justify-content: space-around;
+    }
+
+    .btn-started {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .nav-menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .logo {
+        font-size: 1rem;
+    }
+
+    .logo img {
+        height: 32px;
+    }
+}

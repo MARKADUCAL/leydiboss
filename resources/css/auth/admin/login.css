@@ -1,0 +1,416 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #0f1117;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Top Bar ── */
+.top-bar {
+    padding: 16px 24px;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #1e2433;
+    color: #a0aec0;
+    border: 1px solid #2d3748;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: "Poppins", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+        background 0.2s,
+        color 0.2s;
+}
+
+.btn-back:hover {
+    background-color: #2d3748;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* ── Page Center ── */
+.page-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.login-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 740px;
+}
+
+/* ── Promo Banner ── */
+.promo-banner {
+    width: 100%;
+    background: linear-gradient(90deg, #1a202c, #2d3748);
+    color: #a0aec0;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid #2d3748;
+    letter-spacing: 0.2px;
+    animation: fadeDown 0.4s ease both;
+}
+
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Card ── */
+.login-card {
+    display: flex;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 48px rgba(0, 0, 0, 0.5);
+    animation: fadeUp 0.5s ease both;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Left Brand Panel ── */
+.brand-panel {
+    width: 40%;
+    background: linear-gradient(160deg, #1a202c 0%, #141820 60%, #0d1117 100%);
+    border-right: 1px solid #2d3748;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    gap: 14px;
+}
+
+.brand-logo-wrap {
+    width: 115px;
+    height: 115px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 2px solid #2d3748;
+    box-shadow: 0 0 24px rgba(160, 32, 110, 0.25);
+}
+
+.brand-logo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.brand-name {
+    font-size: 21px;
+    font-weight: 700;
+    color: #f7fafc;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.brand-sub {
+    font-size: 11px;
+    font-weight: 600;
+    color: #a0206e;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: rgba(160, 32, 110, 0.12);
+    border: 1px solid rgba(160, 32, 110, 0.3);
+    border-radius: 20px;
+    padding: 3px 12px;
+    margin-top: -6px;
+}
+
+.brand-tagline {
+    font-size: 12px;
+    color: #718096;
+    text-align: center;
+    line-height: 1.65;
+    padding: 0 4px;
+}
+
+/* ── Section Heading ── */
+.section-heading {
+    font-size: 11px;
+    font-weight: 600;
+    color: #a0206e;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    align-self: flex-start;
+    margin-bottom: -4px;
+}
+
+/* ── Stats Grid ── */
+.stats-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 8px 10px;
+    transition:
+        background 0.2s,
+        border-color 0.2s;
+}
+
+.stat-item:hover {
+    background: rgba(160, 32, 110, 0.08);
+    border-color: rgba(160, 32, 110, 0.35);
+}
+
+.stat-icon {
+    font-size: 15px;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #a0aec0;
+    white-space: nowrap;
+}
+
+/* ── Hours Block ── */
+.hours-block {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid #2d3748;
+    border-radius: 10px;
+    padding: 12px 14px;
+}
+
+.hours-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #a0206e;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.hours-line {
+    font-size: 11px;
+    color: #718096;
+    line-height: 1.8;
+    font-family: "Poppins", monospace;
+}
+
+/* ── Right Form Panel ── */
+.form-panel {
+    flex: 1;
+    background: #1a202c;
+    padding: 44px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-welcome {
+    font-size: 13px;
+    font-weight: 500;
+    color: #a0206e;
+    text-align: center;
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+}
+
+.form-title {
+    font-size: 23px;
+    font-weight: 700;
+    color: #f7fafc;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #a0aec0;
+    margin-bottom: 6px;
+}
+
+.input-wrap {
+    position: relative;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #2d3748;
+    border-radius: 8px;
+    background: #141820;
+    font-family: "Poppins", sans-serif;
+    font-size: 13.5px;
+    color: #f7fafc;
+    outline: none;
+    transition:
+        border-color 0.2s,
+        background 0.2s;
+}
+
+.form-group input::placeholder {
+    color: #4a5568;
+}
+
+.form-group input:focus {
+    border-color: #a0206e;
+    background: #0d1117;
+}
+
+.input-wrap input[type="password"],
+.input-wrap input[type="text"] {
+    padding-right: 44px;
+}
+
+.toggle-pw {
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.toggle-pw:hover {
+    color: #a0206e;
+}
+
+/* Validation errors */
+.error {
+    display: block;
+    font-size: 11.5px;
+    color: #fc8181;
+    margin-top: 4px;
+}
+
+.alert-error {
+    background: rgba(252, 129, 129, 0.08);
+    border: 1px solid rgba(252, 129, 129, 0.3);
+    color: #fc8181;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 16px;
+}
+
+/* ── Submit Button ── */
+.btn-submit {
+    width: 100%;
+    padding: 13px;
+    background: #a0206e;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: "Poppins", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 4px;
+    letter-spacing: 0.3px;
+    transition:
+        background 0.2s,
+        transform 0.1s,
+        box-shadow 0.2s;
+}
+
+.btn-submit:hover {
+    background: #8b1a5f;
+    box-shadow: 0 4px 20px rgba(160, 32, 110, 0.4);
+}
+
+.btn-submit:active {
+    transform: scale(0.98);
+}
+
+/* ── Register Link ── */
+.register-link {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 13px;
+    color: #718096;
+}
+
+.register-link a {
+    color: #a0206e;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+    .login-card {
+        flex-direction: column;
+    }
+    .brand-panel {
+        width: 100%;
+        padding: 32px 24px;
+    }
+    .form-panel {
+        padding: 32px 24px;
+    }
+}
