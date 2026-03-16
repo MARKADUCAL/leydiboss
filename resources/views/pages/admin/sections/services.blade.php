@@ -14,8 +14,7 @@
             <div class="alert alert-success">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {{ session('success') }}
             </div>
@@ -47,12 +46,11 @@
 
                         <div class="form-group">
                             <label>Vehicle Type <span class="req">*</span></label>
-                            <select name="vehicle_type_id" class="form-control @error('vehicle_type_id') is-invalid @enderror"
-                                required>
+                            <select name="vehicle_type_id"
+                                class="form-control @error('vehicle_type_id') is-invalid @enderror" required>
                                 <option value="" disabled selected>Select vehicle type</option>
                                 @foreach ($vehicleTypes as $vt)
-                                    <option value="{{ $vt->id }}"
-                                        @selected((int) old('vehicle_type_id') === $vt->id)>
+                                    <option value="{{ $vt->id }}" @selected((int) old('vehicle_type_id') === $vt->id)>
                                         {{ $vt->code }}{{ $vt->description ? ' — ' . $vt->description : '' }}
                                     </option>
                                 @endforeach
@@ -68,8 +66,7 @@
                                 class="form-control @error('service_package_id') is-invalid @enderror" required>
                                 <option value="" disabled selected>Select service package</option>
                                 @foreach ($packages as $pkg)
-                                    <option value="{{ $pkg->id }}"
-                                        @selected((int) old('service_package_id') === $pkg->id)>
+                                    <option value="{{ $pkg->id }}" @selected((int) old('service_package_id') === $pkg->id)>
                                         {{ $pkg->code }} — {{ $pkg->name }}
                                     </option>
                                 @endforeach
@@ -143,7 +140,7 @@
                     </form>
 
                     <div class="table-card table-card--compact">
-                        <table class="mini-table">
+                        {{-- <table class="mini-table">
                             <thead>
                                 <tr>
                                     <th>Code</th>
@@ -168,7 +165,7 @@
                                         <td>
                                             <div class="row-actions">
                                                 <button class="icon-btn"
-                                                    onclick='openEditPackageModal({{ $pkg->id }}, @json($pkg->code), @json($pkg->name), @json($pkg->description ?? ""), {{ $pkg->is_active ? "true" : "false" }})'
+                                                    onclick='openEditPackageModal({{ $pkg->id }}, @json($pkg->code), @json($pkg->name), @json($pkg->description ?? ''), {{ $pkg->is_active ? 'true' : 'false' }})'
                                                     type="button" title="Edit">
                                                     ✎
                                                 </button>
@@ -186,7 +183,7 @@
                                     </tr>
                                 @endforelse
                             </tbody>
-                        </table>
+                        </table> --}}
                     </div>
                 </div>
 
@@ -231,7 +228,7 @@
                     </form>
 
                     <div class="table-card table-card--compact">
-                        <table class="mini-table">
+                        {{-- <table class="mini-table">
                             <thead>
                                 <tr>
                                     <th>Code</th>
@@ -256,7 +253,7 @@
                                         <td>
                                             <div class="row-actions">
                                                 <button class="icon-btn"
-                                                    onclick='openEditVehicleModal({{ $vt->id }}, @json($vt->code), @json($vt->label ?? ""), @json($vt->description ?? ""), {{ $vt->is_active ? "true" : "false" }})'
+                                                    onclick='openEditVehicleModal({{ $vt->id }}, @json($vt->code), @json($vt->label ?? ''), @json($vt->description ?? ''), {{ $vt->is_active ? 'true' : 'false' }})'
                                                     type="button" title="Edit">
                                                     ✎
                                                 </button>
@@ -274,7 +271,7 @@
                                     </tr>
                                 @endforelse
                             </tbody>
-                        </table>
+                        </table> --}}
                     </div>
                 </div>
 
@@ -326,9 +323,9 @@
                                                         onclick='openPricingModal(
                                                             {{ $vt->id }},
                                                             {{ $pkg->id }},
-                                                            {{ $entry?->id ?? "null" }},
+                                                            {{ $entry?->id ?? 'null' }},
                                                             @json($entry?->price ?? 0),
-                                                            {{ ($entry?->is_active ?? true) ? "true" : "false" }}
+                                                            {{ $entry?->is_active ?? true ? 'true' : 'false' }}
                                                         )'>
                                                         ✎
                                                     </button>
@@ -390,7 +387,7 @@
                                         <td>
                                             <div class="row-actions">
                                                 <button class="btn btn-ghost btn-sm" type="button"
-                                                    onclick='openEditPricingEntryModal({{ $pe->id }}, @json($pe->price), {{ $pe->is_active ? "true" : "false" }})'>
+                                                    onclick='openEditPricingEntryModal({{ $pe->id }}, @json($pe->price), {{ $pe->is_active ? 'true' : 'false' }})'>
                                                     Edit
                                                 </button>
                                                 <button class="btn btn-danger btn-sm" type="button"
@@ -417,6 +414,131 @@
                                 {{ $pricingEntries->links() }}
                             </div>
                         @endif
+                    </div>
+                </div>
+                {{-- Service Packages --}}
+                <div class="card">
+                    <div class="card__header card__header--row">
+                        <div>
+                            <h2>Service Packages</h2>
+                            <p>All stored Service Packages</p>
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <table class="mini-table">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th style="width: 120px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($packages as $pkg)
+                                    <tr>
+                                        <td><span class="code-chip">{{ $pkg->code }}</span></td>
+                                        <td>
+                                            <div class="cell-title">{{ $pkg->name }}</div>
+                                            <div class="cell-sub">{{ $pkg->description ?: '—' }}</div>
+                                        </td>
+                                        <td>
+                                            <span class="badge {{ $pkg->is_active ? 'badge-active' : 'badge-inactive' }}">
+                                                {{ $pkg->is_active ? 'ACTIVE' : 'INACTIVE' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="row-actions">
+                                                <button class="icon-btn"
+                                                    onclick='openEditPackageModal({{ $pkg->id }}, @json($pkg->code), @json($pkg->name), @json($pkg->description ?? ''), {{ $pkg->is_active ? 'true' : 'false' }})'
+                                                    type="button" title="Edit">
+                                                    ✎
+                                                </button>
+                                                <button class="icon-btn icon-btn--danger"
+                                                    onclick='openDeletePackageModal({{ $pkg->id }}, @json($pkg->name))'
+                                                    type="button" title="Delete">
+                                                    🗑
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="empty-td">No packages yet.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+                {{-- Vehicle Types --}}
+                <div class="card">
+                    <div class="card__header card__header--row">
+                        <div>
+                            <h2>Vehicle Types</h2>
+                            <p>All stored Vehicle Types</p>
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <table class="matrix-table">
+                            <thead>
+                                <tr>
+                                    <th class="matrix-th matrix-th--vehicle">Vehicle Type</th>
+                                    @foreach ($packages as $pkg)
+                                        <th class="matrix-th">{{ strtoupper($pkg->code) }}</th>
+                                    @endforeach
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($vehicleTypes as $vt)
+                                    <tr>
+                                        <td class="matrix-td matrix-td--vehicle">
+                                            <div class="vehicle-cell">
+                                                <div class="vehicle-badge">{{ $vt->code }}</div>
+                                                <div class="vehicle-meta">
+                                                    <div class="vehicle-title">{{ $vt->label ?: '—' }}</div>
+                                                    <div class="vehicle-sub">{{ $vt->description ?: '—' }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        @foreach ($packages as $pkg)
+                                            @php
+                                                $entry = data_get($matrix, "{$vt->id}.{$pkg->id}.0");
+                                            @endphp
+                                            <td class="matrix-td">
+                                                <div class="price-cell">
+                                                    <div class="price">
+                                                        {{ $entry ? '₱' . number_format($entry->price, 2) : '—' }}
+                                                    </div>
+                                                    <button type="button" class="icon-btn icon-btn--tiny"
+                                                        title="Edit price"
+                                                        onclick='openPricingModal(
+                                                            {{ $vt->id }},
+                                                            {{ $pkg->id }},
+                                                            {{ $entry?->id ?? 'null' }},
+                                                            @json($entry?->price ?? 0),
+                                                            {{ $entry?->is_active ?? true ? 'true' : 'false' }}
+                                                        )'>
+                                                        ✎
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td class="empty-td" colspan="{{ 1 + max(1, $packages->count()) }}">
+                                            Add vehicle types and packages to start building your matrix.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
 
@@ -594,7 +716,8 @@
                     </label>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-ghost" onclick="closeModal('editPricingEntryModal')">Cancel</button>
+                    <button type="button" class="btn btn-ghost"
+                        onclick="closeModal('editPricingEntryModal')">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
@@ -734,4 +857,3 @@
         </script>
     @endpush
 @endsection
-

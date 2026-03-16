@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\DashboardController    as AdminDashboardControlle
 use App\Http\Controllers\Admin\AdminsController       as AdminAdminsController;
 use App\Http\Controllers\Admin\CustomersController    as AdminCustomersController;
 use App\Http\Controllers\Admin\ServicesManagementController;
+use App\Http\Controllers\Admin\ProfileController      as AdminProfileController;
 
 // ============================================================
 //  Landing Routes
@@ -91,6 +92,10 @@ Route::name('admin.')->prefix('admin')->group(function () {
     // ── Authenticated admin pages ────────────────────────────
     Route::middleware('admin.auth')->group(function () {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+        
+        // Admin Profile (all authenticated admins)
+        Route::get('/profile', [AdminProfileController::class, 'index'])->name('profile.index');
+        Route::put('/profile', [AdminProfileController::class, 'updateProfile'])->name('profile.update');
 
         // Customers CRUD (admin + super_admin)
         Route::middleware('admin.role:admin,super_admin')->group(function () {
