@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class AdminsController extends Controller
@@ -20,13 +21,17 @@ class AdminsController extends Controller
                 $q->where('name',  'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
                   ->orWhere('phone_number', 'like', "%{$search}%");
+
+                if (is_numeric($search)) {
+                    $q->orWhere('id', $search);
+                }
             });
         }
 
         // Get per_page from request, default to 10, max 100
         $perPage = min((int) $request->input('per_page', 10), 100);
 
-        $admins = $query->latest()->paginate($perPage)->withQueryString();
+        $admins = $query->orderBy('id', 'asc')->paginate($perPage)->withQueryString();
 
         return view('pages.admin.sections.admins', [
             'title'  => 'Admin Management — Admin',
@@ -43,6 +48,7 @@ class AdminsController extends Controller
             'email'        => ['required', 'email', 'unique:admins,email'],
             'phone_number' => ['nullable', 'string', 'max:20'],
             'password'     => ['required', 'string', 'min:8', 'confirmed'],
+            'profile_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
         if ($request->user('admin')->isSuperAdmin()) {
             $rules['role'] = ['required', 'string', Rule::in(array_keys(Admin::roles()))];
@@ -60,7 +66,13 @@ class AdminsController extends Controller
         } else {
             $payload['role'] = Admin::ROLE_MANAGER;
         }
-        Admin::create($payload);
+        $admin = Admin::create($payload);
+
+        if ($request->hasFile('profile_photo')) {
+            $newPath = $request->file('profile_photo')->store('profile-photos', 'public');
+            $admin->profile_photo_path = $newPath;
+            $admin->save();
+        }
 
         return redirect()->route('admin.admins.index')
                          ->with('success', 'Admin created successfully.');
@@ -74,6 +86,7 @@ class AdminsController extends Controller
             'email'        => ['required', 'email', Rule::unique('admins', 'email')->ignore($admin->id)],
             'phone_number' => ['nullable', 'string', 'max:20'],
             'password'     => ['nullable', 'string', 'min:8', 'confirmed'],
+            'profile_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
         if ($request->user('admin')->isSuperAdmin()) {
             $rules['role'] = ['required', 'string', Rule::in(array_keys(Admin::roles()))];
@@ -88,6 +101,16 @@ class AdminsController extends Controller
         }
         if (!empty($data['password'])) {
             $admin->password = Hash::make($data['password']);
+        }
+
+        if ($request->hasFile('profile_photo')) {
+            $newPath = $request->file('profile_photo')->store('profile-photos', 'public');
+
+            if (!empty($admin->profile_photo_path)) {
+                Storage::disk('public')->delete($admin->profile_photo_path);
+            }
+
+            $admin->profile_photo_path = $newPath;
         }
 
         $admin->save();

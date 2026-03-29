@@ -38,7 +38,16 @@
             @endphp
 
             <div class="cp-profile">
-                <div class="cp-avatar" aria-hidden="true">{{ $initials }}</div>
+                <button type="button" id="cpProfileAvatarBtn" class="cp-avatar cp-avatar--clickable"
+                    data-photo-url="{{ $customer->profile_photo_url ?? '' }}"
+                    @if (empty($customer->profile_photo_url)) aria-disabled="true" @endif>
+                    @if (!empty($customer->profile_photo_url))
+                        <img class="cp-avatar__img" src="{{ $customer->profile_photo_url }}"
+                            alt="{{ $customer->name ?? 'Customer' }} profile photo">
+                    @else
+                        <span class="cp-avatar__initials" aria-hidden="true">{{ $initials }}</span>
+                    @endif
+                </button>
 
                 <div class="cp-profile__fields">
                     <div class="cp-field">
@@ -140,12 +149,38 @@
                 <button type="button" class="cp-modal__close" onclick="closeModal('editProfileModal')">✕</button>
             </div>
 
-            <form method="POST" action="{{ route('customer.profile.update') }}">
+            <form method="POST" action="{{ route('customer.profile.update') }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="form_name" value="edit_profile">
 
                 <div class="cp-modal__body">
+                    <div class="cp-form-group">
+                        <label>Profile Photo</label>
+                        <div class="cp-photo-field">
+                            <button type="button" class="cp-photo-field__preview cp-avatar cp-photo-field__preview-btn"
+                                style="width:64px;height:64px;margin-left:0;"
+                                id="cpEditPhotoPreviewBtn"
+                                @if (empty($customer->profile_photo_url)) aria-disabled="true" @endif>
+                                <img id="cp_edit_photo_preview" class="cp-avatar__img"
+                                    alt="{{ $customer->name ?? 'Customer' }} profile photo"
+                                    @if (empty($customer->profile_photo_url)) style="display:none;" @endif
+                                    @if (!empty($customer->profile_photo_url)) src="{{ $customer->profile_photo_url }}" @endif>
+                                <span id="cp_edit_photo_fallback" class="cp-avatar__initials" aria-hidden="true"
+                                    @if (!empty($customer->profile_photo_url)) style="display:none;" @endif>
+                                    {{ $initials }}
+                                </span>
+                            </button>
+
+                            <input id="cp_edit_profile_photo" type="file" name="profile_photo"
+                                class="cp-input @error('profile_photo') is-invalid @enderror"
+                                accept="image/png,image/jpeg,image/webp">
+                        </div>
+                        @error('profile_photo')
+                            <div class="cp-error">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <div class="cp-form-group">
                         <label>Full Name <span class="cp-req">*</span></label>
                         <input type="text" name="name" class="cp-input @error('name') is-invalid @enderror"
@@ -266,6 +301,16 @@
     </div>
 
     @push('scripts')
+        {{-- Full image viewer --}}
+        <div class="cp-photo-viewer" id="cpPhotoViewer" aria-hidden="true">
+            <div class="cp-photo-viewer__backdrop" onclick="cpClosePhotoViewer()"></div>
+            <div class="cp-photo-viewer__dialog" role="dialog" aria-modal="true" aria-label="Profile photo viewer">
+                <button type="button" class="cp-photo-viewer__close" onclick="cpClosePhotoViewer()"
+                    aria-label="Close photo viewer">✕</button>
+                <img id="cpPhotoViewerImg" class="cp-photo-viewer__img" alt="Profile photo">
+            </div>
+        </div>
+
         <script>
             function openModal(id) {
                 document.getElementById(id).classList.add('open');
@@ -273,6 +318,25 @@
 
             function closeModal(id) {
                 document.getElementById(id).classList.remove('open');
+            }
+
+            function cpOpenPhotoViewerFrom(src) {
+                const viewer = document.getElementById('cpPhotoViewer');
+                const viewerImg = document.getElementById('cpPhotoViewerImg');
+                if (!src) return;
+
+                viewerImg.src = src;
+                viewer.classList.add('open');
+                viewer.setAttribute('aria-hidden', 'false');
+            }
+
+            function cpClosePhotoViewer() {
+                const viewer = document.getElementById('cpPhotoViewer');
+                const viewerImg = document.getElementById('cpPhotoViewerImg');
+                if (!viewer) return;
+                viewer.classList.remove('open');
+                viewer.setAttribute('aria-hidden', 'true');
+                if (viewerImg) viewerImg.removeAttribute('src');
             }
 
             document.querySelectorAll('.cp-modal-backdrop').forEach(el => {
@@ -284,8 +348,44 @@
             document.addEventListener('keydown', e => {
                 if (e.key === 'Escape') {
                     document.querySelectorAll('.cp-modal-backdrop.open').forEach(el => el.classList.remove('open'));
+                    cpClosePhotoViewer();
                 }
             });
+
+            const cpPhotoInput = document.getElementById('cp_edit_profile_photo');
+            if (cpPhotoInput) cpPhotoInput.addEventListener('change', function() {
+                const file = this.files && this.files[0];
+                const preview = document.getElementById('cp_edit_photo_preview');
+                const fallback = document.getElementById('cp_edit_photo_fallback');
+                if (!file) return;
+
+                const url = URL.createObjectURL(file);
+                preview.src = url;
+                preview.style.display = 'block';
+                fallback.style.display = 'none';
+
+                const btn = document.getElementById('cpEditPhotoPreviewBtn');
+                if (btn) btn.setAttribute('aria-disabled', 'false');
+            });
+
+            const cpProfileAvatarBtn = document.getElementById('cpProfileAvatarBtn');
+            if (cpProfileAvatarBtn) {
+                cpProfileAvatarBtn.addEventListener('click', function() {
+                    const url = this.getAttribute('data-photo-url');
+                    if (!url) return;
+                    cpOpenPhotoViewerFrom(url);
+                });
+            }
+
+            const cpEditPhotoPreviewBtn = document.getElementById('cpEditPhotoPreviewBtn');
+            if (cpEditPhotoPreviewBtn) {
+                cpEditPhotoPreviewBtn.addEventListener('click', function() {
+                    const img = document.getElementById('cp_edit_photo_preview');
+                    const url = img ? img.getAttribute('src') : null;
+                    if (!url) return;
+                    cpOpenPhotoViewerFrom(url);
+                });
+            }
 
             @if ($errors->any())
                 @if (old('form_name') === 'edit_profile')

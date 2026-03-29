@@ -1,4 +1,9 @@
 {{-- resources/views/components/admin/topbar.blade.php --}}
+@php
+    $admin = Auth::guard('admin')->user();
+    $adminName = $admin?->name ?? 'Admin';
+    $adminInitials = strtoupper(substr($adminName, 0, 2));
+@endphp
 <div class="lb-topbar">
 
     {{-- ── Sidebar Toggle Button ───────────────────────────── --}}
@@ -17,9 +22,17 @@
     {{-- ── User Dropdown ───────────────────────────────────── --}}
     <div class="lb-topbar__user" id="adminUserDropdown">
 
-        <div class="lb-topbar__avatar">
-            {{ strtoupper(substr(Auth::guard('admin')->user()->name, 0, 2)) }}
-        </div>
+        <button type="button" class="lb-topbar__avatar lb-topbar__avatar-btn" id="lbAdminTopbarAvatarBtn"
+            data-photo-url="{{ $admin?->profile_photo_url ?? '' }}"
+            data-photo-name="{{ $adminName }}"
+            @if (empty($admin?->profile_photo_url)) aria-disabled="true" @endif>
+            @if (!empty($admin?->profile_photo_url))
+                <img class="lb-topbar__avatar-img" src="{{ $admin->profile_photo_url }}"
+                    alt="{{ $adminName }} profile photo">
+            @else
+                <span aria-hidden="true">{{ $adminInitials }}</span>
+            @endif
+        </button>
 
         <button class="lb-topbar__user-btn" onclick="toggleAdminDropdown()">
             <span class="lb-topbar__user-name">{{ Auth::guard('admin')->user()->name }}</span>
@@ -53,6 +66,16 @@
 
     </div>
 
+</div>
+
+{{-- Full image viewer (admin topbar) --}}
+<div class="lb-photo-viewer" id="lbAdminTopbarPhotoViewer" aria-hidden="true">
+    <div class="lb-photo-viewer__backdrop" onclick="lbCloseAdminTopbarPhotoViewer()"></div>
+    <div class="lb-photo-viewer__dialog" role="dialog" aria-modal="true" aria-label="Profile photo viewer">
+        <button type="button" class="lb-photo-viewer__close" onclick="lbCloseAdminTopbarPhotoViewer()"
+            aria-label="Close photo viewer">✕</button>
+        <img id="lbAdminTopbarPhotoViewerImg" class="lb-photo-viewer__img" alt="Profile photo">
+    </div>
 </div>
 
 <script>
@@ -94,5 +117,40 @@
             document.querySelector('.lb-layout__sidebar').classList.remove('open');
         }
     });
-</script>
+
+    function lbOpenAdminTopbarPhotoViewer(src, name) {
+        const viewer = document.getElementById('lbAdminTopbarPhotoViewer');
+        const img = document.getElementById('lbAdminTopbarPhotoViewerImg');
+        if (!viewer || !img || !src) return;
+        img.src = src;
+        img.alt = (name || 'Admin') + ' profile photo';
+        viewer.classList.add('open');
+        viewer.setAttribute('aria-hidden', 'false');
+    }
+
+    function lbCloseAdminTopbarPhotoViewer() {
+        const viewer = document.getElementById('lbAdminTopbarPhotoViewer');
+        const img = document.getElementById('lbAdminTopbarPhotoViewerImg');
+        if (!viewer) return;
+        viewer.classList.remove('open');
+        viewer.setAttribute('aria-hidden', 'true');
+        if (img) img.removeAttribute('src');
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            lbCloseAdminTopbarPhotoViewer();
+        }
+    });
+
+    (function() {
+        const btn = document.getElementById('lbAdminTopbarAvatarBtn');
+        if (!btn) return;
+        btn.addEventListener('click', function() {
+            const src = btn.getAttribute('data-photo-url');
+            const name = btn.getAttribute('data-photo-name');
+            if (!src) return;
+            lbOpenAdminTopbarPhotoViewer(src, name);
+        });
+    })();
 </script>

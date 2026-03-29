@@ -7,6 +7,7 @@ use App\Models\Vehicle;
 use App\Models\VehicleType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
@@ -44,6 +45,7 @@ class ProfileController extends Controller
             'email' => ['required', 'email', Rule::unique('customers', 'email')->ignore($customer->id)],
             'phone_number' => ['nullable', 'string', 'max:20'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'profile_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'form_name' => ['nullable', 'string'],
         ]);
 
@@ -54,6 +56,16 @@ class ProfileController extends Controller
         if (!empty($data['password'])) {
             // Customer model has 'password' => 'hashed' cast
             $customer->password = $data['password'];
+        }
+
+        if ($request->hasFile('profile_photo')) {
+            $newPath = $request->file('profile_photo')->store('profile-photos', 'public');
+
+            if (!empty($customer->profile_photo_path)) {
+                Storage::disk('public')->delete($customer->profile_photo_path);
+            }
+
+            $customer->profile_photo_path = $newPath;
         }
 
         $customer->save();

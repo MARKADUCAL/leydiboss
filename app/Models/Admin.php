@@ -30,6 +30,7 @@ class Admin extends Authenticatable
         'email',
         'phone_number',
         'password',
+        'profile_photo_path',
         'role',
     ];
 
@@ -44,6 +45,14 @@ class Admin extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getProfilePhotoUrlAttribute(): ?string
+    {
+        if (!$this->profile_photo_path) {
+            return null;
+        }
+        return asset('storage/' . ltrim($this->profile_photo_path, '/'));
     }
 
     public function isManager(): bool

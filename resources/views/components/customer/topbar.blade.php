@@ -29,9 +29,17 @@
     <div class="lb-topbar__user" id="lbUserMenu">
 
         {{-- Avatar circle with initials --}}
-        <div class="lb-topbar__avatar" aria-hidden="true">
-            {{ $userInitials }}
-        </div>
+        <button type="button" class="lb-topbar__avatar lb-topbar__avatar-btn" id="lbTopbarAvatarBtn"
+            data-photo-url="{{ $customer?->profile_photo_url ?? '' }}"
+            data-photo-name="{{ $customer?->name ?? 'Customer' }}"
+            @if (empty($customer?->profile_photo_url)) aria-disabled="true" @endif>
+            @if (!empty($customer?->profile_photo_url))
+                <img class="lb-topbar__avatar-img" src="{{ $customer->profile_photo_url }}"
+                    alt="{{ $customer?->name ?? 'Customer' }} profile photo">
+            @else
+                <span aria-hidden="true">{{ $userInitials }}</span>
+            @endif
+        </button>
 
         {{-- Full name (login username) --}}
         <span class="lb-topbar__username">
@@ -80,6 +88,16 @@
     </div>
 
 </header>
+
+{{-- Full image viewer (topbar) --}}
+<div class="lb-photo-viewer" id="lbTopbarPhotoViewer" aria-hidden="true">
+    <div class="lb-photo-viewer__backdrop" onclick="lbCloseTopbarPhotoViewer()"></div>
+    <div class="lb-photo-viewer__dialog" role="dialog" aria-modal="true" aria-label="Profile photo viewer">
+        <button type="button" class="lb-photo-viewer__close" onclick="lbCloseTopbarPhotoViewer()"
+            aria-label="Close photo viewer">✕</button>
+        <img id="lbTopbarPhotoViewerImg" class="lb-photo-viewer__img" alt="Profile photo">
+    </div>
+</div>
 
 {{-- Close dropdown when clicking outside --}}
 <script>
@@ -136,4 +154,40 @@
             document.querySelector('.lb-layout__sidebar').classList.remove('open');
         }
     });
+
+    function lbOpenTopbarPhotoViewer(src, name) {
+        const viewer = document.getElementById('lbTopbarPhotoViewer');
+        const img = document.getElementById('lbTopbarPhotoViewerImg');
+        if (!viewer || !img || !src) return;
+        img.src = src;
+        img.alt = (name || 'Customer') + ' profile photo';
+        viewer.classList.add('open');
+        viewer.setAttribute('aria-hidden', 'false');
+    }
+
+    function lbCloseTopbarPhotoViewer() {
+        const viewer = document.getElementById('lbTopbarPhotoViewer');
+        const img = document.getElementById('lbTopbarPhotoViewerImg');
+        if (!viewer) return;
+        viewer.classList.remove('open');
+        viewer.setAttribute('aria-hidden', 'true');
+        if (img) img.removeAttribute('src');
+    }
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            lbCloseTopbarPhotoViewer();
+        }
+    });
+
+    (function() {
+        const btn = document.getElementById('lbTopbarAvatarBtn');
+        if (!btn) return;
+        btn.addEventListener('click', function() {
+            const src = btn.getAttribute('data-photo-url');
+            const name = btn.getAttribute('data-photo-name');
+            if (!src) return;
+            lbOpenTopbarPhotoViewer(src, name);
+        });
+    })();
 </script>

@@ -80,6 +80,36 @@
     font-size: 26px;
     box-shadow: 0 10px 20px rgba(255, 77, 45, 0.25);
     margin-left: 6px;
+    overflow: hidden;
+}
+
+.cp-avatar--clickable {
+    border: none;
+    cursor: zoom-in;
+}
+
+.cp-avatar--clickable[aria-disabled="true"] {
+    cursor: default;
+}
+
+.cp-avatar--clickable:focus-visible {
+    outline: 3px solid rgba(255, 77, 45, 0.25);
+    outline-offset: 3px;
+}
+
+.cp-avatar__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.cp-avatar__initials {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 .cp-profile__fields {
@@ -296,6 +326,7 @@
     position: fixed;
     inset: 0;
     background: rgba(15, 23, 42, 0.4);
+    -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
     align-items: center;
     justify-content: center;
@@ -419,6 +450,88 @@
     font-weight: 800;
     font-size: 12px;
     margin-top: 6px;
+}
+
+.cp-photo-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cp-photo-field__preview {
+    flex-shrink: 0;
+}
+
+.cp-photo-field__preview-btn {
+    border: none;
+    cursor: zoom-in;
+}
+
+.cp-photo-field__preview-btn[aria-disabled="true"] {
+    cursor: default;
+}
+
+.cp-photo-field__preview-btn:focus-visible {
+    outline: 3px solid rgba(255, 77, 45, 0.25);
+    outline-offset: 3px;
+}
+
+.cp-photo-viewer {
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 2000;
+}
+
+.cp-photo-viewer.open {
+    display: block;
+}
+
+.cp-photo-viewer__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+}
+
+.cp-photo-viewer__dialog {
+    position: relative;
+    max-width: min(92vw, 820px);
+    max-height: 86vh;
+    margin: 7vh auto 0;
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.25);
+}
+
+.cp-photo-viewer__img {
+    width: 100%;
+    height: auto;
+    max-height: 86vh;
+    object-fit: contain;
+    display: block;
+    background: #0b1220;
+}
+
+.cp-photo-viewer__close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    background: rgba(255, 255, 255, 0.92);
+    cursor: pointer;
+    font-weight: 900;
+    color: #334155;
+}
+
+.cp-photo-viewer__close:hover {
+    background: #ffffff;
+    color: #0f172a;
 }
 
 /* Responsive */

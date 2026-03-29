@@ -53,7 +53,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
                 </svg>
-                <input type="text" name="search" class="search-input" placeholder="Search by name, email or phone…"
+                <input type="text" name="search" class="search-input" placeholder="Search by ID, name, email or phone…"
                     value="{{ $search ?? '' }}" autocomplete="off">
             </form>
 
@@ -83,7 +83,8 @@
 
         {{-- ── Table Card ───────────────────────────────────────── --}}
         <div class="table-card">
-            <table class="admins-table">
+            <div style="overflow-x: auto;">
+                <table class="admins-table">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -102,7 +103,12 @@
                             <td>
                                 <div class="admin-name-cell">
                                     <div class="admin-avatar">
-                                        {{ strtoupper(substr($admin->name, 0, 2)) }}
+                                        @if (!empty($admin->profile_photo_url))
+                                            <img class="admin-avatar__img" src="{{ $admin->profile_photo_url }}"
+                                                alt="{{ $admin->name }} profile photo">
+                                        @else
+                                            <span aria-hidden="true">{{ strtoupper(substr($admin->name, 0, 2)) }}</span>
+                                        @endif
                                     </div>
                                     <span class="admin-name">{{ $admin->name }}</span>
                                 </div>
@@ -115,7 +121,7 @@
                                 <div class="table-actions">
                                     {{-- Edit --}}
                                     <button class="btn btn-ghost btn-sm"
-                                        onclick='openEditModal({{ $admin->id }}, @json($admin->name), @json($admin->email), @json($admin->phone_number ?? ''), @json($admin->role))'>
+                                        onclick='openEditModal({{ $admin->id }}, @json($admin->name), @json($admin->email), @json($admin->phone_number ?? ''), @json($admin->role), @json($admin->profile_photo_url))'>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -157,6 +163,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
 
             {{-- Pagination --}}
             @if ($admins->hasPages())
@@ -165,7 +172,7 @@
                         Showing {{ $admins->firstItem() }}–{{ $admins->lastItem() }} of {{ $admins->total() }} results
                     </span>
                     <div class="pagination-nav">
-                        {{ $admins->links() }}
+                        {{ $admins->links('components.admin.pagination') }}
                     </div>
                 </div>
             @endif
@@ -276,11 +283,29 @@
                 </button>
             </div>
 
-            <form method="POST" id="editForm" action="">
+            <form method="POST" id="editForm" action="" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
                     <input type="hidden" id="edit_admin_id" name="admin_id" value="{{ old('admin_id') }}">
+
+                    <div class="form-group">
+                        <label>Profile Photo</label>
+                        <div style="display:flex; align-items:center; gap: .75rem;">
+                            <button type="button" class="admin-avatar" id="adminEditPhotoPreviewBtn"
+                                style="width:44px;height:44px; border:none; cursor: zoom-in; overflow:hidden;"
+                                aria-disabled="true">
+                                <img id="edit_photo_preview" class="admin-avatar__img" alt="Profile preview" style="display:none;">
+                                <span id="edit_photo_fallback" aria-hidden="true">--</span>
+                            </button>
+                            <input type="file" id="edit_profile_photo" name="profile_photo"
+                                class="form-control @error('profile_photo') is-invalid @enderror"
+                                accept="image/png,image/jpeg,image/webp">
+                        </div>
+                        @error('profile_photo')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
                     <div class="form-group">
                         <label for="edit_name">Full Name <span style="color:#ef4444">*</span></label>
@@ -379,6 +404,16 @@
     </div>
 
     @push('scripts')
+        {{-- Full image viewer (admins page) --}}
+        <div class="lb-photo-viewer" id="lbAdminsPhotoViewer" aria-hidden="true">
+            <div class="lb-photo-viewer__backdrop" onclick="lbCloseAdminsPhotoViewer()"></div>
+            <div class="lb-photo-viewer__dialog" role="dialog" aria-modal="true" aria-label="Profile photo viewer">
+                <button type="button" class="lb-photo-viewer__close" onclick="lbCloseAdminsPhotoViewer()"
+                    aria-label="Close photo viewer">✕</button>
+                <img id="lbAdminsPhotoViewerImg" class="lb-photo-viewer__img" alt="Profile photo">
+            </div>
+        </div>
+
         <script>
             // ── Modal helpers ────────────────────────────────────────
             function openModal(id) {
@@ -402,8 +437,28 @@
                     document.querySelectorAll('.modal-backdrop.open').forEach(el => {
                         el.classList.remove('open');
                     });
+                    lbCloseAdminsPhotoViewer();
                 }
             });
+
+            function lbOpenAdminsPhotoViewer(src, name) {
+                const viewer = document.getElementById('lbAdminsPhotoViewer');
+                const img = document.getElementById('lbAdminsPhotoViewerImg');
+                if (!viewer || !img || !src) return;
+                img.src = src;
+                img.alt = (name || 'Admin') + ' profile photo';
+                viewer.classList.add('open');
+                viewer.setAttribute('aria-hidden', 'false');
+            }
+
+            function lbCloseAdminsPhotoViewer() {
+                const viewer = document.getElementById('lbAdminsPhotoViewer');
+                const img = document.getElementById('lbAdminsPhotoViewerImg');
+                if (!viewer) return;
+                viewer.classList.remove('open');
+                viewer.setAttribute('aria-hidden', 'true');
+                if (img) img.removeAttribute('src');
+            }
 
             // ── Create ───────────────────────────────────────────────
             function openCreateModal() {
@@ -411,7 +466,7 @@
             }
 
             // ── Edit ─────────────────────────────────────────────────
-            function openEditModal(id, name, email, phone, role) {
+            function openEditModal(id, name, email, phone, role, photoUrl) {
                 const updateUrlTemplate = @json(route('admin.admins.update', ['admin' => '__ID__']));
                 document.getElementById('editForm').action = updateUrlTemplate.replace('__ID__', id);
                 document.getElementById('edit_admin_id').value = id;
@@ -421,8 +476,69 @@
                 document.getElementById('edit_role').value = role || 'manager';
                 document.getElementById('edit_password').value = '';
                 document.getElementById('edit_password_confirmation').value = '';
+
+                const initials = String(name || '')
+                    .trim()
+                    .split(/\s+/)
+                    .filter(Boolean)
+                    .slice(0, 2)
+                    .map(p => p[0])
+                    .join('')
+                    .toUpperCase()
+                    .padEnd(2, '-')
+                    .slice(0, 2);
+
+                const preview = document.getElementById('edit_photo_preview');
+                const fallback = document.getElementById('edit_photo_fallback');
+                const fileInput = document.getElementById('edit_profile_photo');
+                const previewBtn = document.getElementById('adminEditPhotoPreviewBtn');
+
+                fallback.textContent = initials;
+                fileInput.value = '';
+
+                if (photoUrl) {
+                    preview.src = photoUrl;
+                    preview.style.display = 'block';
+                    fallback.style.display = 'none';
+                    if (previewBtn) previewBtn.setAttribute('aria-disabled', 'false');
+                } else {
+                    preview.removeAttribute('src');
+                    preview.style.display = 'none';
+                    fallback.style.display = 'inline';
+                    if (previewBtn) previewBtn.setAttribute('aria-disabled', 'true');
+                }
+
                 openModal('editModal');
             }
+
+            document.getElementById('edit_profile_photo')?.addEventListener('change', function() {
+                const file = this.files?.[0];
+                const preview = document.getElementById('edit_photo_preview');
+                const fallback = document.getElementById('edit_photo_fallback');
+                if (!file) return;
+
+                const url = URL.createObjectURL(file);
+                preview.src = url;
+                preview.style.display = 'block';
+                fallback.style.display = 'none';
+
+                const previewBtn = document.getElementById('adminEditPhotoPreviewBtn');
+                if (previewBtn) previewBtn.setAttribute('aria-disabled', 'false');
+            });
+
+            (function() {
+                const btn = document.getElementById('adminEditPhotoPreviewBtn');
+                if (!btn) return;
+                btn.addEventListener('click', function() {
+                    const disabled = btn.getAttribute('aria-disabled') === 'true';
+                    if (disabled) return;
+                    const img = document.getElementById('edit_photo_preview');
+                    const src = img ? img.getAttribute('src') : null;
+                    const name = document.getElementById('edit_name') ? document.getElementById('edit_name').value : 'Admin';
+                    if (!src) return;
+                    lbOpenAdminsPhotoViewer(src, name);
+                });
+            })();
 
             // ── Delete ───────────────────────────────────────────────
             function openDeleteModal(id, name) {
@@ -441,7 +557,8 @@
                         @json(old('name')),
                         @json(old('email')),
                         @json(old('phone_number')),
-                        @json(old('role'))
+                        @json(old('role')),
+                        @json(null)
                     );
                 @else
                     openModal('createModal');

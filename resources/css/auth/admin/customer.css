@@ -224,6 +224,15 @@
     justify-content: center;
     flex-shrink: 0;
     text-transform: uppercase;
+    overflow: hidden;
+}
+
+.customer-avatar__img,
+.admin-avatar__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .customer-name-cell,

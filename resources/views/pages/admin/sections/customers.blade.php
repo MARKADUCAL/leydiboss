@@ -53,7 +53,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
                 </svg>
-                <input type="text" name="search" class="search-input" placeholder="Search by name, email or phone…"
+                <input type="text" name="search" class="search-input" placeholder="Search by ID, name, email or phone…"
                     value="{{ $search ?? '' }}" autocomplete="off">
             </form>
 
@@ -83,7 +83,8 @@
 
         {{-- ── Table Card ───────────────────────────────────────── --}}
         <div class="table-card">
-            <table class="customers-table">
+            <div style="overflow-x: auto;">
+                <table class="customers-table">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -101,7 +102,12 @@
                             <td>
                                 <div class="customer-name-cell">
                                     <div class="customer-avatar">
-                                        {{ strtoupper(substr($customer->name, 0, 2)) }}
+                                        @if (!empty($customer->profile_photo_url))
+                                            <img class="customer-avatar__img" src="{{ $customer->profile_photo_url }}"
+                                                alt="{{ $customer->name }} profile photo">
+                                        @else
+                                            <span aria-hidden="true">{{ strtoupper(substr($customer->name, 0, 2)) }}</span>
+                                        @endif
                                     </div>
                                     <span class="customer-name">{{ $customer->name }}</span>
                                 </div>
@@ -113,12 +119,12 @@
                                 <div class="table-actions">
                                     {{-- Edit --}}
                                     <button class="btn btn-ghost btn-sm"
-                                        onclick='openEditModal({{ $customer->id }}, @json($customer->name), @json($customer->email), @json($customer->phone_number ?? ''))'>
+                                        onclick='openEditModal({{ $customer->id }}, @json($customer->name), @json($customer->email), @json($customer->phone_number ?? ''), @json($customer->profile_photo_url))'>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5
-                                                                 m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                                     m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                         </svg>
                                         Edit
                                     </button>
@@ -130,7 +136,7 @@
                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858
-                                                                 L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                                     L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                         </svg>
                                         Delete
                                     </button>
@@ -144,9 +150,9 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2
-                                                             c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857
-                                                             M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0
-                                                             019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                 c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857
+                                                                 M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0
+                                                                 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
                                     <p>No customers found{{ $search ? ' for "' . $search . '"' : '' }}.</p>
                                 </div>
@@ -155,6 +161,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
 
             {{-- Pagination --}}
             @if ($customers->hasPages())
@@ -164,7 +171,7 @@
                         results
                     </span>
                     <div class="pagination-nav">
-                        {{ $customers->links() }}
+                        {{ $customers->links('components.admin.pagination') }}
                     </div>
                 </div>
             @endif
@@ -263,11 +270,30 @@
                 </button>
             </div>
 
-            <form method="POST" id="editForm" action="">
+            <form method="POST" id="editForm" action="" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
                     <input type="hidden" id="edit_customer_id" name="customer_id" value="{{ old('customer_id') }}">
+
+                    <div class="form-group">
+                        <label>Profile Photo</label>
+                        <div style="display:flex; align-items:center; gap: .75rem;">
+                            <button type="button" class="customer-avatar" id="customerEditPhotoPreviewBtn"
+                                style="width:44px;height:44px; border:none; cursor: zoom-in; overflow:hidden;"
+                                aria-disabled="true">
+                                <img id="edit_photo_preview" class="customer-avatar__img" alt="Profile preview"
+                                    style="display:none;">
+                                <span id="edit_photo_fallback" aria-hidden="true">--</span>
+                            </button>
+                            <input type="file" id="edit_profile_photo" name="profile_photo"
+                                class="form-control @error('profile_photo') is-invalid @enderror"
+                                accept="image/png,image/jpeg,image/webp">
+                        </div>
+                        @error('profile_photo')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
                     <div class="form-group">
                         <label for="edit_name">Full Name <span style="color:#ef4444">*</span></label>
@@ -335,7 +361,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858
-                                                 L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                     L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                 </div>
                 <h3>Delete Customer?</h3>
@@ -354,7 +380,35 @@
     </div>
 
     @push('scripts')
+        {{-- Full image viewer (customers page) --}}
+        <div class="lb-photo-viewer" id="lbCustomersPhotoViewer" aria-hidden="true">
+            <div class="lb-photo-viewer__backdrop" onclick="lbCloseCustomersPhotoViewer()"></div>
+            <div class="lb-photo-viewer__dialog" role="dialog" aria-modal="true" aria-label="Profile photo viewer">
+                <button type="button" class="lb-photo-viewer__close" onclick="lbCloseCustomersPhotoViewer()"
+                    aria-label="Close photo viewer">✕</button>
+                <img id="lbCustomersPhotoViewerImg" class="lb-photo-viewer__img" alt="Profile photo">
+            </div>
+        </div>
+
         <script>
+            function lbOpenCustomersPhotoViewer(src, name) {
+                const viewer = document.getElementById('lbCustomersPhotoViewer');
+                const img = document.getElementById('lbCustomersPhotoViewerImg');
+                if (!viewer || !img || !src) return;
+                img.src = src;
+                img.alt = (name || 'Customer') + ' profile photo';
+                viewer.classList.add('open');
+                viewer.setAttribute('aria-hidden', 'false');
+            }
+
+            function lbCloseCustomersPhotoViewer() {
+                const viewer = document.getElementById('lbCustomersPhotoViewer');
+                const img = document.getElementById('lbCustomersPhotoViewerImg');
+                if (!viewer) return;
+                viewer.classList.remove('open');
+                viewer.setAttribute('aria-hidden', 'true');
+                if (img) img.removeAttribute('src');
+            }
             // ── Modal helpers ────────────────────────────────────────
             function openModal(id) {
                 document.getElementById(id).classList.add('open');
@@ -377,6 +431,7 @@
                     document.querySelectorAll('.modal-backdrop.open').forEach(el => {
                         el.classList.remove('open');
                     });
+                    lbCloseCustomersPhotoViewer();
                 }
             });
 
@@ -386,7 +441,7 @@
             }
 
             // ── Edit ─────────────────────────────────────────────────
-            function openEditModal(id, name, email, phone) {
+            function openEditModal(id, name, email, phone, photoUrl) {
                 const updateUrlTemplate = @json(route('admin.customers.update', ['customer' => '__ID__']));
                 document.getElementById('editForm').action = updateUrlTemplate.replace('__ID__', id);
                 document.getElementById('edit_customer_id').value = id;
@@ -395,8 +450,70 @@
                 document.getElementById('edit_phone').value = phone;
                 document.getElementById('edit_password').value = '';
                 document.getElementById('edit_password_confirmation').value = '';
+
+                const initials = String(name || '')
+                    .trim()
+                    .split(/\s+/)
+                    .filter(Boolean)
+                    .slice(0, 2)
+                    .map(p => p[0])
+                    .join('')
+                    .toUpperCase()
+                    .padEnd(2, '-')
+                    .slice(0, 2);
+
+                const preview = document.getElementById('edit_photo_preview');
+                const fallback = document.getElementById('edit_photo_fallback');
+                const fileInput = document.getElementById('edit_profile_photo');
+                const previewBtn = document.getElementById('customerEditPhotoPreviewBtn');
+
+                fallback.textContent = initials;
+                fileInput.value = '';
+
+                if (photoUrl) {
+                    preview.src = photoUrl;
+                    preview.style.display = 'block';
+                    fallback.style.display = 'none';
+                    if (previewBtn) previewBtn.setAttribute('aria-disabled', 'false');
+                } else {
+                    preview.removeAttribute('src');
+                    preview.style.display = 'none';
+                    fallback.style.display = 'inline';
+                    if (previewBtn) previewBtn.setAttribute('aria-disabled', 'true');
+                }
+
                 openModal('editModal');
             }
+
+            document.getElementById('edit_profile_photo')?.addEventListener('change', function() {
+                const file = this.files?.[0];
+                const preview = document.getElementById('edit_photo_preview');
+                const fallback = document.getElementById('edit_photo_fallback');
+                if (!file) return;
+
+                const url = URL.createObjectURL(file);
+                preview.src = url;
+                preview.style.display = 'block';
+                fallback.style.display = 'none';
+
+                const previewBtn = document.getElementById('customerEditPhotoPreviewBtn');
+                if (previewBtn) previewBtn.setAttribute('aria-disabled', 'false');
+            });
+
+            (function() {
+                const btn = document.getElementById('customerEditPhotoPreviewBtn');
+                if (!btn) return;
+                btn.addEventListener('click', function() {
+                    const disabled = btn.getAttribute('aria-disabled') === 'true';
+                    if (disabled) return;
+                    const img = document.getElementById('edit_photo_preview');
+                    const src = img ? img.getAttribute('src') : null;
+                    const name = document.getElementById('edit_name') ? document.getElementById('edit_name').value :
+                        'Customer';
+                    if (!src) return;
+                    lbOpenCustomersPhotoViewer(src, name);
+                });
+            })();
 
             // ── Delete ───────────────────────────────────────────────
             function openDeleteModal(id, name) {
@@ -414,7 +531,8 @@
                         @json(old('customer_id')),
                         @json(old('name')),
                         @json(old('email')),
-                        @json(old('phone_number'))
+                        @json(old('phone_number')),
+                        @json(null)
                     );
                 @else
                     openModal('createModal');
