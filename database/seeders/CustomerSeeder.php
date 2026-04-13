@@ -9,14 +9,7 @@ class CustomerSeeder extends Seeder
 {
     public function run(): void
     {
-        // $this->command->info('Creating 100 customers with avatars (this may take a moment to download)...');
-        // Customer::factory()->count(100)->withAvatar()->create();
-
-        // $this->command->info('Creating 100 customers without avatars...');
-        // Customer::factory()->count(100)->create([
-        //     'profile_photo_path' => null,
-        // ]);
-
-        // $this->command->info('200 customers seeded successfully!');
+        // Create 10 customers (one "role" group out of four, for a total of 40 users)
+        Customer::factory()->count(10)->create();
     }
 }

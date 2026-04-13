@@ -484,56 +484,46 @@
                     </div>
 
                     <div class="table-card">
-                        <table class="matrix-table">
+                        <table class="mini-table">
                             <thead>
                                 <tr>
-                                    <th class="matrix-th matrix-th--vehicle">Vehicle Type</th>
-                                    @foreach ($packages as $pkg)
-                                        <th class="matrix-th">{{ strtoupper($pkg->code) }}</th>
-                                    @endforeach
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th style="width: 120px;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($vehicleTypes as $vt)
                                     <tr>
-                                        <td class="matrix-td matrix-td--vehicle">
-                                            <div class="vehicle-cell">
-                                                <div class="vehicle-badge">{{ $vt->code }}</div>
-                                                <div class="vehicle-meta">
-                                                    <div class="vehicle-title">{{ $vt->label ?: '—' }}</div>
-                                                    <div class="vehicle-sub">{{ $vt->description ?: '—' }}</div>
-                                                </div>
+                                        <td><span class="code-chip">{{ $vt->code }}</span></td>
+                                        <td>
+                                            <div class="cell-title">{{ $vt->label ?: '—' }}</div>
+                                            <div class="cell-sub">{{ $vt->description ?: '—' }}</div>
+                                        </td>
+                                        <td>
+                                            <span class="badge {{ $vt->is_active ? 'badge-active' : 'badge-inactive' }}">
+                                                {{ $vt->is_active ? 'ACTIVE' : 'INACTIVE' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="row-actions">
+                                                <button class="icon-btn"
+                                                    onclick='openEditVehicleModal({{ $vt->id }}, @json($vt->code), @json($vt->label ?? ''), @json($vt->description ?? ''), {{ $vt->is_active ? 'true' : 'false' }})'
+                                                    type="button" title="Edit">
+                                                    ✎
+                                                </button>
+                                                <button class="icon-btn icon-btn--danger"
+                                                    onclick='openDeleteVehicleModal({{ $vt->id }}, @json($vt->code))'
+                                                    type="button" title="Delete">
+                                                    🗑
+                                                </button>
                                             </div>
                                         </td>
-                                        @foreach ($packages as $pkg)
-                                            @php
-                                                $entry = data_get($matrix, "{$vt->id}.{$pkg->id}.0");
-                                            @endphp
-                                            <td class="matrix-td">
-                                                <div class="price-cell">
-                                                    <div class="price">
-                                                        {{ $entry ? '₱' . number_format($entry->price, 2) : '—' }}
-                                                    </div>
-                                                    <button type="button" class="icon-btn icon-btn--tiny"
-                                                        title="Edit price"
-                                                        onclick='openPricingModal(
-                                                            {{ $vt->id }},
-                                                            {{ $pkg->id }},
-                                                            {{ $entry?->id ?? 'null' }},
-                                                            @json($entry?->price ?? 0),
-                                                            {{ $entry?->is_active ?? true ? 'true' : 'false' }}
-                                                        )'>
-                                                        ✎
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        @endforeach
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td class="empty-td" colspan="{{ 1 + max(1, $packages->count()) }}">
-                                            Add vehicle types and packages to start building your matrix.
-                                        </td>
+                                        <td colspan="4" class="empty-td">No vehicle types yet.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

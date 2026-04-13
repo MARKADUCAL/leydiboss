@@ -1,0 +1,329 @@
+/* Wallet Transactions (Jobs UI) */
+
+/* ── Page wrapper ──────────────────────────────────────────────────────── */
+.wt-page {
+    padding: 2rem;
+    max-width: 860px;
+}
+
+.wt-page__heading {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: .4rem;
+}
+
+.wt-page__heading h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0;
+}
+
+.wt-page__heading .wt-badge {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: .25rem .6rem;
+    border-radius: 999px;
+}
+
+.wt-page__sub {
+    font-size: .875rem;
+    color: #6b7280;
+    margin-bottom: 2rem;
+}
+
+/* ── Alert ─────────────────────────────────────────────────────────────── */
+.wt-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    margin-bottom: 1.75rem;
+    font-size: .875rem;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.wt-alert--success {
+    background: #ecfdf5;
+    border: 1px solid #6ee7b7;
+    color: #065f46;
+}
+
+.wt-alert--error {
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    color: #991b1b;
+}
+
+.wt-alert__icon {
+    font-size: 1.15rem;
+    flex-shrink: 0;
+    margin-top: .05rem;
+}
+
+/* ── Cards ─────────────────────────────────────────────────────────────── */
+.wt-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+    .wt-cards { grid-template-columns: 1fr; }
+}
+
+.wt-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    overflow: hidden;
+    transition: box-shadow .2s;
+}
+
+.wt-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+
+.wt-card__header {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #f0f0f5;
+}
+
+.wt-card__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+}
+
+.wt-card__icon--purple { background: linear-gradient(135deg, #ede9fe, #c4b5fd); }
+.wt-card__icon--teal   { background: linear-gradient(135deg, #d1fae5, #6ee7b7); }
+
+.wt-card__title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 .1rem;
+}
+
+.wt-card__desc {
+    font-size: .78rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.wt-card__body {
+    padding: 1.5rem;
+}
+
+/* ── Form elements ─────────────────────────────────────────────────────── */
+.wt-form-group {
+    margin-bottom: 1.1rem;
+}
+
+.wt-form-group label {
+    display: block;
+    font-size: .8rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: .4rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.wt-form-control {
+    width: 100%;
+    padding: .6rem .85rem;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: .9rem;
+    color: #1f2937;
+    background: #fafafa;
+    outline: none;
+    transition: border-color .18s, box-shadow .18s;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.wt-form-control:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+    background: #fff;
+}
+
+/* ── Role pills ────────────────────────────────────────────────────────── */
+.wt-role-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .5rem;
+    margin-bottom: 1.1rem;
+}
+
+.wt-role-group input[type="radio"] { display: none; }
+
+.wt-role-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    padding: .55rem .5rem;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: .8rem;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all .18s;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.wt-role-pill:hover {
+    border-color: #a78bfa;
+    color: #7c3aed;
+    background: #f5f3ff;
+}
+
+.wt-role-group input[type="radio"]:checked + .wt-role-pill {
+    border-color: #6366f1;
+    background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+    color: #4f46e5;
+}
+
+/* ── Spinner hint ──────────────────────────────────────────────────────── */
+.wt-hint {
+    font-size: .75rem;
+    color: #9ca3af;
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+}
+
+/* ── Submit buttons ────────────────────────────────────────────────────── */
+.wt-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    width: 100%;
+    padding: .7rem 1rem;
+    border: none;
+    border-radius: 9px;
+    font-size: .9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+    letter-spacing: .01em;
+}
+
+.wt-btn--purple {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(99,102,241,.3);
+}
+
+.wt-btn--purple:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(99,102,241,.4);
+}
+
+.wt-btn--teal {
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(16,185,129,.3);
+}
+
+.wt-btn--teal:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(16,185,129,.4);
+}
+
+.wt-btn:active { transform: translateY(0); }
+
+/* ── Info strip ────────────────────────────────────────────────────────── */
+.wt-info-strip {
+    margin-top: 2rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+}
+
+.wt-info-strip__title {
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #64748b;
+    margin: 0 0 .75rem;
+}
+
+.wt-info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .5rem .75rem;
+}
+
+@media (max-width: 500px) {
+    .wt-info-list { grid-template-columns: 1fr; }
+}
+
+.wt-info-list li {
+    font-size: .82rem;
+    color: #475569;
+    display: flex;
+    align-items: flex-start;
+    gap: .4rem;
+    line-height: 1.45;
+}
+
+.wt-info-list li .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #6366f1;
+    flex-shrink: 0;
+    margin-top: .35rem;
+}
+
+/* ── Max input row ─────────────────────────────────────────────────────── */
+.wt-input-row {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.wt-input-row .wt-form-control { flex: 1; }
+
+.wt-input-row .wt-max-label {
+    font-size: .75rem;
+    white-space: nowrap;
+    color: #9ca3af;
+}
+
+.wt-divider {
+    border: none;
+    border-top: 1px solid #f0f0f5;
+    margin: 1rem 0;
+}
+
+/* ── Loading spinner ──────────────────────────────────────────────────── */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+

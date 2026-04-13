@@ -85,82 +85,89 @@
         <div class="table-card">
             <div style="overflow-x: auto;">
                 <table class="customers-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Customer</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Joined</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($customers as $customer)
+                    <thead>
                         <tr>
-                            <td style="color:#9ca3af;font-size:.8rem;">{{ $customer->id }}</td>
-                            <td>
-                                <div class="customer-name-cell">
-                                    <div class="customer-avatar">
-                                        @if (!empty($customer->profile_photo_url))
-                                            <img class="customer-avatar__img" src="{{ $customer->profile_photo_url }}"
-                                                alt="{{ $customer->name }} profile photo">
-                                        @else
-                                            <span aria-hidden="true">{{ strtoupper(substr($customer->name, 0, 2)) }}</span>
-                                        @endif
+                            <th>#</th>
+                            <th>Customer</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Balance</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($customers as $customer)
+                            <tr>
+                                <td style="color:#9ca3af;font-size:.8rem;">{{ $customer->id }}</td>
+                                <td>
+                                    <div class="customer-name-cell">
+                                        <div class="customer-avatar">
+                                            @if (!empty($customer->profile_photo_url))
+                                                <img class="customer-avatar__img" src="{{ $customer->profile_photo_url }}"
+                                                    alt="{{ $customer->name }} profile photo">
+                                            @else
+                                                <span
+                                                    aria-hidden="true">{{ strtoupper(substr($customer->name, 0, 2)) }}</span>
+                                            @endif
+                                        </div>
+                                        <span class="customer-name">{{ $customer->name }}</span>
                                     </div>
-                                    <span class="customer-name">{{ $customer->name }}</span>
-                                </div>
-                            </td>
-                            <td>{{ $customer->email }}</td>
-                            <td>{{ $customer->phone_number ?? '—' }}</td>
-                            <td>{{ $customer->created_at->format('M d, Y') }}</td>
-                            <td>
-                                <div class="table-actions">
-                                    {{-- Edit --}}
-                                    <button class="btn btn-ghost btn-sm"
-                                        onclick='openEditModal({{ $customer->id }}, @json($customer->name), @json($customer->email), @json($customer->phone_number ?? ''), @json($customer->profile_photo_url))'>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5
-                                                                     m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
-                                        Edit
-                                    </button>
+                                </td>
+                                <td>{{ $customer->email }}</td>
+                                <td>{{ $customer->phone_number ?? '—' }}</td>
+                                <td>
+                                    <span
+                                        style="font-weight: 600; color: #1e40af;">₱{{ number_format($customer->balance, 2) }}</span>
+                                </td>
+                                <td>{{ $customer->created_at->format('M d, Y') }}</td>
+                                <td>
+                                    <div class="table-actions">
+                                        {{-- Edit --}}
+                                        <button class="btn btn-ghost btn-sm"
+                                            onclick='openEditModal({{ $customer->id }}, @json($customer->name), @json($customer->email), @json($customer->phone_number ?? ''), @json($customer->profile_photo_url))'>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5
+                                                                         m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                            Edit
+                                        </button>
 
-                                    {{-- Delete --}}
-                                    <button class="btn btn-danger btn-sm"
-                                        onclick='openDeleteModal({{ $customer->id }}, @json($customer->name))'>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858
-                                                                     L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        {{-- Delete --}}
+                                        <button class="btn btn-danger btn-sm"
+                                            onclick='openDeleteModal({{ $customer->id }}, @json($customer->name))'>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858
+                                                                         L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7">
+                                    <div class="empty-state">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2
+                                                                     c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857
+                                                                     M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0
+                                                                     019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                                         </svg>
-                                        Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6">
-                                <div class="empty-state">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2
-                                                                 c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857
-                                                                 M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0
-                                                                 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    <p>No customers found{{ $search ? ' for "' . $search . '"' : '' }}.</p>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                        <p>No customers found{{ $search ? ' for "' . $search . '"' : '' }}.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
 
             {{-- Pagination --}}
@@ -361,7 +368,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858
-                                                     L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                         L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                 </div>
                 <h3>Delete Customer?</h3>

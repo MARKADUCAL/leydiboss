@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\AdminsController       as AdminAdminsController;
 use App\Http\Controllers\Admin\CustomersController    as AdminCustomersController;
 use App\Http\Controllers\Admin\ServicesManagementController;
 use App\Http\Controllers\Admin\ProfileController      as AdminProfileController;
+use App\Http\Controllers\Admin\CreateUserWalletTransactionsController;
 
 // ============================================================
 //  Landing Routes
@@ -113,6 +114,11 @@ Route::name('admin.')->prefix('admin')->group(function () {
             Route::delete( '/admins/{admin}',  [AdminAdminsController::class, 'destroy'])->name('admins.destroy');
         });
 
+        // Wallet Transactions Tool (all authenticated admins)
+        Route::get( '/wallet-transactions',                 [CreateUserWalletTransactionsController::class, 'index'         ])->name('wallet-transactions.index');
+        Route::post('/wallet-transactions/generate',        [CreateUserWalletTransactionsController::class, 'generate'       ])->name('wallet-transactions.generate');
+        Route::post('/wallet-transactions/update-balances', [CreateUserWalletTransactionsController::class, 'updateBalances' ])->name('wallet-transactions.update-balances');
+
         // Services & Pricing Management
         Route::get('/services', [ServicesManagementController::class, 'index'])->name('services.index');
 
@@ -132,3 +138,28 @@ Route::name('admin.')->prefix('admin')->group(function () {
         Route::delete('/services/pricing/{pricingEntry}', [ServicesManagementController::class, 'destroyPricing'])->name('services.pricing.destroy');
     });
 });
+
+// // ============================================================
+// //  Demo Routes (Queue / Job Closure Demonstration)
+// // ============================================================
+// Route::get('/demo-queue', function () {
+//     // Dispatching a job as a simple closure
+//     dispatch(function () {
+//         $startTime = now();
+//         \Log::info("Starting closure job at {$startTime}");
+        
+//         // Simulating a long-running task (5 seconds) to demonstrate max execution time mechanics
+//         sleep(5); 
+
+//         $endTime = now();
+//         \Log::info("Finished closure job at {$endTime}. Total time: " . $endTime->diffInSeconds($startTime) . " seconds.");
+//     });
+
+//     return response()->json([
+//         'message' => 'Closure job dispatched successfully!',
+//         'instructions' => [
+//             'success_test' => 'Run `php artisan queue:work --timeout=10` (Allows the 5-second job to finish)',
+//             'timeout_test' => 'Run `php artisan queue:work --timeout=3` (Forces the job to fail due to max execution time)'
+//         ]
+//     ]);
+// });

@@ -85,84 +85,93 @@
         <div class="table-card">
             <div style="overflow-x: auto;">
                 <table class="admins-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Admin</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Role</th>
-                        <th>Joined</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($admins as $admin)
+                    <thead>
                         <tr>
-                            <td style="color:#9ca3af;font-size:.8rem;">{{ $admin->id }}</td>
-                            <td>
-                                <div class="admin-name-cell">
-                                    <div class="admin-avatar">
-                                        @if (!empty($admin->profile_photo_url))
-                                            <img class="admin-avatar__img" src="{{ $admin->profile_photo_url }}"
-                                                alt="{{ $admin->name }} profile photo">
-                                        @else
-                                            <span aria-hidden="true">{{ strtoupper(substr($admin->name, 0, 2)) }}</span>
-                                        @endif
+                            <th>#</th>
+                            <th>Admin</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Balance</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($admins as $admin)
+                            <tr>
+                                <td style="color:#9ca3af;font-size:.8rem;">{{ $admin->id }}</td>
+                                <td>
+                                    <div class="admin-name-cell">
+                                        <div class="admin-avatar">
+                                            @if (!empty($admin->profile_photo_url))
+                                                <img class="admin-avatar__img" src="{{ $admin->profile_photo_url }}"
+                                                    alt="{{ $admin->name }} profile photo">
+                                            @else
+                                                <span
+                                                    aria-hidden="true">{{ strtoupper(substr($admin->name, 0, 2)) }}</span>
+                                            @endif
+                                        </div>
+                                        <span class="admin-name">{{ $admin->name }}</span>
                                     </div>
-                                    <span class="admin-name">{{ $admin->name }}</span>
-                                </div>
-                            </td>
-                            <td>{{ $admin->email }}</td>
-                            <td>{{ $admin->phone_number ?? '—' }}</td>
-                            <td><span class="role-badge role-badge--{{ $admin->role }}">{{ \App\Models\Admin::roles()[$admin->role] ?? $admin->role }}</span></td>
-                            <td>{{ $admin->created_at->format('M d, Y') }}</td>
-                            <td>
-                                <div class="table-actions">
-                                    {{-- Edit --}}
-                                    <button class="btn btn-ghost btn-sm"
-                                        onclick='openEditModal({{ $admin->id }}, @json($admin->name), @json($admin->email), @json($admin->phone_number ?? ''), @json($admin->role), @json($admin->profile_photo_url))'>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5
-                                                                     m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
-                                        Edit
-                                    </button>
+                                </td>
+                                <td>{{ $admin->email }}</td>
+                                <td>{{ $admin->phone_number ?? '—' }}</td>
+                                <td><span
+                                        class="role-badge role-badge--{{ $admin->role }}">{{ \App\Models\Admin::roles()[$admin->role] ?? $admin->role }}</span>
+                                </td>
+                                <td>
+                                    <span
+                                        style="font-weight: 600; color: #1e40af;">₱{{ number_format($admin->balance, 2) }}</span>
+                                </td>
+                                <td>{{ $admin->created_at->format('M d, Y') }}</td>
+                                <td>
+                                    <div class="table-actions">
+                                        {{-- Edit --}}
+                                        <button class="btn btn-ghost btn-sm"
+                                            onclick='openEditModal({{ $admin->id }}, @json($admin->name), @json($admin->email), @json($admin->phone_number ?? ''), @json($admin->role), @json($admin->profile_photo_url))'>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5
+                                                                         m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                            Edit
+                                        </button>
 
-                                    {{-- Delete --}}
-                                    <button class="btn btn-danger btn-sm"
-                                        onclick='openDeleteModal({{ $admin->id }}, @json($admin->name))'>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858
-                                                                     L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        {{-- Delete --}}
+                                        <button class="btn btn-danger btn-sm"
+                                            onclick='openDeleteModal({{ $admin->id }}, @json($admin->name))'>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858
+                                                                         L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8">
+                                    <div class="empty-state">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2
+                                                                     c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857
+                                                                     M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0
+                                                                     019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                                         </svg>
-                                        Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7">
-                                <div class="empty-state">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2
-                                                                 c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857
-                                                                 M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0
-                                                                 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    <p>No admins found{{ $search ? ' for "' . $search . '"' : '' }}.</p>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                        <p>No admins found{{ $search ? ' for "' . $search . '"' : '' }}.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
 
             {{-- Pagination --}}
@@ -231,9 +240,11 @@
 
                     <div class="form-group">
                         <label for="create_role">Role <span style="color:#ef4444">*</span></label>
-                        <select id="create_role" name="role" class="form-control @error('role') is-invalid @enderror" required>
+                        <select id="create_role" name="role" class="form-control @error('role') is-invalid @enderror"
+                            required>
                             @foreach (\App\Models\Admin::roles() as $value => $label)
-                                <option value="{{ $value }}" @selected(old('role', 'manager') === $value)>{{ $label }}</option>
+                                <option value="{{ $value }}" @selected(old('role', 'manager') === $value)>{{ $label }}
+                                </option>
                             @endforeach
                         </select>
                         @error('role')
@@ -295,7 +306,8 @@
                             <button type="button" class="admin-avatar" id="adminEditPhotoPreviewBtn"
                                 style="width:44px;height:44px; border:none; cursor: zoom-in; overflow:hidden;"
                                 aria-disabled="true">
-                                <img id="edit_photo_preview" class="admin-avatar__img" alt="Profile preview" style="display:none;">
+                                <img id="edit_photo_preview" class="admin-avatar__img" alt="Profile preview"
+                                    style="display:none;">
                                 <span id="edit_photo_fallback" aria-hidden="true">--</span>
                             </button>
                             <input type="file" id="edit_profile_photo" name="profile_photo"
@@ -339,9 +351,11 @@
 
                     <div class="form-group">
                         <label for="edit_role">Role <span style="color:#ef4444">*</span></label>
-                        <select id="edit_role" name="role" class="form-control @error('role') is-invalid @enderror" required>
+                        <select id="edit_role" name="role" class="form-control @error('role') is-invalid @enderror"
+                            required>
                             @foreach (\App\Models\Admin::roles() as $value => $label)
-                                <option value="{{ $value }}" @selected((old('_method') === 'PUT' ? old('role') : '') === $value)>{{ $label }}</option>
+                                <option value="{{ $value }}" @selected((old('_method') === 'PUT' ? old('role') : '') === $value)>{{ $label }}
+                                </option>
                             @endforeach
                         </select>
                         @error('role')
@@ -385,7 +399,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858
-                                                     L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                         L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                 </div>
                 <h3>Delete Admin?</h3>
@@ -534,7 +548,8 @@
                     if (disabled) return;
                     const img = document.getElementById('edit_photo_preview');
                     const src = img ? img.getAttribute('src') : null;
-                    const name = document.getElementById('edit_name') ? document.getElementById('edit_name').value : 'Admin';
+                    const name = document.getElementById('edit_name') ? document.getElementById('edit_name').value :
+                        'Admin';
                     if (!src) return;
                     lbOpenAdminsPhotoViewer(src, name);
                 });

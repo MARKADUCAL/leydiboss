@@ -28,7 +28,7 @@ class ServicesManagementController extends Controller
         $pricingEntries = PricingEntry::query()
             ->with(['vehicleType', 'servicePackage'])
             ->latest()
-            ->paginate(12)
+            ->paginate(10)
             ->withQueryString();
 
         $matrix = PricingEntry::query()

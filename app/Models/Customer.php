@@ -8,10 +8,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
+use App\Models\WalletTransaction;
+use Laravel\Sanctum\HasApiTokens;
 
 class Customer extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
 
     protected $keyType = 'int';
 
@@ -25,11 +27,11 @@ class Customer extends Authenticatable
         'phone_number',
         'password',
         'profile_photo_path',
+        'balance',
     ];
 
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     protected static function boot()
@@ -82,6 +84,11 @@ class Customer extends Authenticatable
     public function vehicles(): HasMany
     {
         return $this->hasMany(Vehicle::class, 'customer_id');
+    }
+
+    public function walletTransactions(): HasMany
+    {
+        return $this->hasMany(WalletTransaction::class, 'customer_id');
     }
 }
 
