@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/customer/logout', [CustomerAuthController::class, 'logout']);
     Route::get('/customer/profile', [CustomerAuthController::class, 'profile']);
     Route::put('/customer/profile', [CustomerAuthController::class, 'updateProfile']);
+    Route::post('/customer/profile-photo', [CustomerAuthController::class, 'uploadProfilePhoto']);
     Route::delete('/customer/profile', [CustomerAuthController::class, 'deleteProfile']);
     Route::apiResource('vehicles', CustomerVehicleController::class);
 });
@@ -32,6 +33,7 @@ Route::middleware(['auth:sanctum', 'admin.api'])->group(function () {
     Route::post('/admin/logout', [AdminAuthController::class, 'logout']);
     Route::get('/admin/profile', [AdminAuthController::class, 'profile']);
     Route::put('/admin/profile', [AdminAuthController::class, 'updateProfile']);
+    Route::post('/admin/profile-photo', [AdminAuthController::class, 'uploadProfilePhoto']);
     Route::delete('/admin/profile', [AdminAuthController::class, 'deleteProfile']);
 
     // Super Admin can manage other admins

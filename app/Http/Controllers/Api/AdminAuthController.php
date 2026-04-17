@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminLoginRequest;
 use App\Http\Requests\AdminRegisterRequest;
 use App\Http\Requests\UpdateAdminProfileRequest;
+use App\Http\Requests\UploadAdminProfilePhotoRequest;
 use App\Http\Resources\AdminResource;
 use App\Models\Admin;
 use App\Traits\RoleBasedAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AdminAuthController extends Controller
 {
@@ -353,6 +355,43 @@ class AdminAuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to retrieve admin',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Upload admin profile photo.
+     */
+    public function uploadProfilePhoto(UploadAdminProfilePhotoRequest $request): JsonResponse
+    {
+        try {
+            $admin = auth('sanctum')->user();
+
+            if (!$admin) {
+                return response()->json([
+                    'message' => 'Unauthorized - Please login first',
+                ], 401);
+            }
+
+            // Delete old profile photo if it exists
+            if ($admin->profile_photo_path && Storage::disk('public')->exists($admin->profile_photo_path)) {
+                Storage::disk('public')->delete($admin->profile_photo_path);
+            }
+
+            // Store new profile photo
+            $photoPath = $request->file('profile_photo')->store('profile-photos', 'public');
+
+            // Update admin's profile photo path
+            $admin->update(['profile_photo_path' => $photoPath]);
+
+            return response()->json([
+                'message' => 'Profile photo uploaded successfully',
+                'data' => new AdminResource($admin),
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to upload profile photo',
                 'error' => $e->getMessage(),
             ], 500);
         }

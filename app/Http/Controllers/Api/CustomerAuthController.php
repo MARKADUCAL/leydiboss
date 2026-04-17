@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerLoginRequest;
 use App\Http\Requests\CustomerRegisterRequest;
 use App\Http\Requests\UpdateCustomerProfileRequest;
+use App\Http\Requests\UploadCustomerProfilePhotoRequest;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
 use App\Traits\RoleBasedAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class CustomerAuthController extends Controller
 {
@@ -245,6 +247,43 @@ class CustomerAuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to delete profile',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Upload customer profile photo.
+     */
+    public function uploadProfilePhoto(UploadCustomerProfilePhotoRequest $request): JsonResponse
+    {
+        try {
+            $customer = auth('sanctum')->user();
+
+            if (!$customer) {
+                return response()->json([
+                    'message' => 'Unauthorized - Please login first',
+                ], 401);
+            }
+
+            // Delete old profile photo if it exists
+            if ($customer->profile_photo_path && Storage::disk('public')->exists($customer->profile_photo_path)) {
+                Storage::disk('public')->delete($customer->profile_photo_path);
+            }
+
+            // Store new profile photo
+            $photoPath = $request->file('profile_photo')->store('profile-photos', 'public');
+
+            // Update customer's profile photo path
+            $customer->update(['profile_photo_path' => $photoPath]);
+
+            return response()->json([
+                'message' => 'Profile photo uploaded successfully',
+                'data' => new CustomerResource($customer),
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to upload profile photo',
                 'error' => $e->getMessage(),
             ], 500);
         }
