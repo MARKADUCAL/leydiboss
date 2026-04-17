@@ -8,10 +8,12 @@ use App\Http\Requests\AdminRegisterRequest;
 use App\Http\Requests\UpdateAdminProfileRequest;
 use App\Http\Requests\UploadAdminProfilePhotoRequest;
 use App\Http\Resources\AdminResource;
+use App\Mail\WelcomeEmail;
 use App\Models\Admin;
 use App\Traits\RoleBasedAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class AdminAuthController extends Controller
@@ -32,6 +34,9 @@ class AdminAuthController extends Controller
                 'role' => $request->role ?? Admin::ROLE_MANAGER, // Default role
                 'balance' => 0, // Initial balance
             ]);
+
+            // Send welcome email
+            Mail::to($admin->email)->send(new WelcomeEmail($admin));
 
             // Create API token for the admin
             $token = $admin->createToken('api_token')->plainTextToken;

@@ -8,10 +8,12 @@ use App\Http\Requests\CustomerRegisterRequest;
 use App\Http\Requests\UpdateCustomerProfileRequest;
 use App\Http\Requests\UploadCustomerProfilePhotoRequest;
 use App\Http\Resources\CustomerResource;
+use App\Mail\WelcomeEmail;
 use App\Models\Customer;
 use App\Traits\RoleBasedAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class CustomerAuthController extends Controller
@@ -96,6 +98,9 @@ class CustomerAuthController extends Controller
                 'password' => Hash::make($request->password),
                 'balance' => 0, // Initial balance
             ]);
+
+            // Send welcome email
+            Mail::to($customer->email)->send(new WelcomeEmail($customer));
 
             // Create API token for the customer
             $token = $customer->createToken('api_token')->plainTextToken;

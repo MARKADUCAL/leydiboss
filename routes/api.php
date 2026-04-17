@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\PricingEntryController;
 use App\Http\Controllers\Api\CustomerAuthController;
 use App\Http\Controllers\Api\CustomerVehicleController;
 use App\Http\Controllers\Api\AdminAuthController;
+use App\Http\Controllers\TestEmailController;
 
 // ─── login and register Routes ────────────────────────────────────────
 Route::post('/customer/register', [CustomerAuthController::class, 'register']);
@@ -52,4 +53,6 @@ Route::middleware(['auth:sanctum', 'admin.api'])->group(function () {
     Route::apiResource('pricing-entries', PricingEntryController::class);
 });
 
-// ─── admin services Routes ───────────────────────────────
+// ─── Email Testing Routes (Remove in Production) ───────────────────────
+Route::post('/test-email/welcome', [TestEmailController::class, 'sendWelcome']);
+Route::get('/test-email/status', [TestEmailController::class, 'getMailStatus']);
